@@ -11,99 +11,6 @@ const bigScoreEl = document.querySelector('#bigScoreEl');
 
 const context = canvas.getContext('2d');
 
-// class Player {
-//   constructor(x, y, radius, color) {
-//     this.x = x;
-//     this.y = y;
-//     this.radius = radius;
-//     this.color = color;
-//   }
-  
-//   draw() {
-//     context.beginPath();
-//     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-//     context.fillStyle = this.color;
-//     context.fill()
-//   }
-// }
-
-// class Projectile {
-//   constructor (x, y, radius, color, velocity) {
-//     this.x = x;
-//     this.y = y;
-//     this.radius = radius;
-//     this.color = color;
-//     this.velocity = velocity;
-//   }
-  
-//   draw() {
-//     context.beginPath();
-//     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-//     context.fillStyle = this.color;
-//     context.fill()
-//   }
-
-//   update() {
-//     this.draw();
-//     this.x = this.x + this.velocity.x;
-//     this.y = this.y + this.velocity.y;
-//   }
-// }
-
-// class Enemy {
-//   constructor (x, y, radius, color, velocity) {
-//     this.x = x;
-//     this.y = y;
-//     this.radius = radius;
-//     this.color = color;
-//     this.velocity = velocity;
-//   }
-  
-//   draw() {
-//     context.beginPath();
-//     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-//     context.fillStyle = this.color;
-//     context.fill()
-//   }
-
-//   update() {
-//     this.draw();
-//     this.x = this.x + this.velocity.x;
-//     this.y = this.y + this.velocity.y;
-//   }
-// }
-
-// const frication = 0.99;
-// class Particle {
-//   constructor (x, y, radius, color, velocity) {
-//     this.x = x;
-//     this.y = y;
-//     this.radius = radius;
-//     this.color = color;
-//     this.velocity = velocity;
-//     this.alpha = 1;
-//   }
-  
-//   draw() {
-//     context.save()
-//     context.globalAlpha = this.alpha;
-//     context.beginPath();
-//     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-//     context.fillStyle = this.color;
-//     context.fill()
-//     context.restore()
-//   }
-
-//   update() {
-//     this.draw();
-//     this.velocity.x *= frication;
-//     this.velocity.y *= frication;
-//     this.x = this.x + this.velocity.x;
-//     this.y = this.y + this.velocity.y;
-//     this.alpha -= 0.01
-//   }
-// }
-
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
@@ -154,6 +61,7 @@ function animate() {
   context.fillStyle = 'rgba(0, 0, 0, 0.3)';
   context.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
+  // player.update()
   particles.forEach((particle, index) => {
     if(particle.alpha <= 0) {
       particles.splice(index, 1);
@@ -232,13 +140,13 @@ function animate() {
 }
 
 addEventListener('click', (event, ) => {
-  const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2);
+  const angle = Math.atan2(event.clientY - player.y, event.clientX - player.x);
   const velocity = {
     x: Math.cos(angle) * 5,
     y: Math.sin(angle) * 5
   }
   
-  projectiles.push(new Projectile(canvas.width / 2, canvas.height / 2, 5, 'white', velocity));
+  projectiles.push(new Projectile(player.x, player.y, 5, 'white', velocity));
 });
 
 startGameBtn.addEventListener('click', () => {
@@ -248,5 +156,14 @@ startGameBtn.addEventListener('click', () => {
   modalEl.style.display = 'none';
 })
 
+addEventListener('keydown', function (e) {
+  player.controls = (player.controls || []);
+  player.controls[e.keyCode] = true;
+  player.update();
+})
+addEventListener('keyup', function (e) {
+  player.controls[e.keyCode] = false;
+  player.update();
+})
 
 

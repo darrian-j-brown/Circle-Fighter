@@ -7,6 +7,11 @@ export class Player {
     this.y = y;
     this.radius = radius;
     this.color = color;
+    this.speed = 1;
+    this.moveAngle = 0;
+    this.angle = 0
+    this.controls = [];
+    
   }
   
   draw() {
@@ -14,6 +19,13 @@ export class Player {
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     context.fillStyle = this.color;
     context.fill()
+  }
+  update() {
+    this.draw();
+    if (this.controls && this.controls[87]) {this.y -= 5; }
+    if (this.controls && this.controls[65]) {this.x -= 5; }
+    if (this.controls && this.controls[83]) {this.y += 5; }
+    if (this.controls && this.controls[68]) {this.x += 5; }
   }
 }
 
@@ -93,3 +105,4 @@ export class Particle {
     this.alpha -= 0.01
   }
 }
+
