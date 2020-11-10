@@ -8,6 +8,9 @@ html, body {
   /* set to full screen */
   width:100%;
   height:100%;
+  margin: 0;
+  background: black;
+  cursor: crosshair;
 }
 
 canvas {
@@ -15,9 +18,51 @@ canvas {
   display:block;
 }
 
-.circle {
-  height: 100px;
-  width: 100px;
-  border-radius: 50%;
-  background-color: green;
+.lives {
+  position: fixed;
+  color: white;
+  margin-left: .50rem;
+  margin-top: 1.50rem;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.specialMeter {
+  background-color: blue;
+  height: 15px;
+  width: 150px;
+  margin-left: .50rem;
+  margin: 0 auto;
+  border: solid 1px #aaa;
+  position: fixed;
+  color: white;
+  margin-top: 3rem;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.specialMeter2 {
+background-color: lightblue;
+width: inherit;
+height: 28px;
+position: relative;
+bottom: 56px;
+}
+
+.health-bar-container {
+position: fixed;
+background: none;
+border: 1px solid white;
+width: 200px;
+height: 20px;
+transform: translateX(-50%) translateY(-390%);
+}
+
+.health-bar {
+display: inline-block;
+width: 100%;
+height: 20px;
+background-color: #33ee33;
 }

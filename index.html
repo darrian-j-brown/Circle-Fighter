@@ -1,12 +1,7 @@
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-<style>
-  body {
-    margin: 0;
-    background: black;
-  }
-  
-</style>
-<div class="fixed text-white text-sm ml-2 mt-1 select-none"><span>Score: </span><span id="scoreEl">0</span></div>
+<link rel="stylesheet" href="./style.css"></link>
+<div class="fixed text-white text-lg ml-2 mt-1 select-none"><span>Score: </span><span id="scoreEl">0</span></div>
+<div class="lives"><span>Lives: </span><span id="lives">0</span></div>
 
 <div class="fixed inset-0 flex items-center justify-center" id="modalEl">
   <div class="bg-white max-w-md w-full p-6 text-center">
@@ -18,7 +13,22 @@
   </div>
 </div>
 
-<div class="circle"></div>
+      <div class="health-box fixed">
+        <div class="health-bar-red"></div>
+        <div class="health-bar-blue"></div>
+        <div class="health-bar"></div>
+        <div class="health-bar-text"></div>
+      </div>
+      <div class="specialMeter2 fixed">
+        <div class="health-bar-red"></div>
+        <div class="health-bar-blue"></div>
+        <div class="specialMeter"></div>
+        <div class="health-bar-text"></div>
+      </div>
+
+      <div>
+        <span class="health-bar-container"><span class="health-bar" id="test"></span></span>
+      </div>
 
 <canvas></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js" integrity="sha512-IQLehpLoVS4fNzl7IfH8Iowfm5+RiMGtHykgZJl9AWMgqx0AmJ6cRWcB+GaGVtIsnC4voMfm8f2vwtY+6oPjpQ==" crossorigin="anonymous"></script>
