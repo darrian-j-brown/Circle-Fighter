@@ -67,3 +67,20 @@ width: 100%;
 height: 20px;
 background-color: #33ee33;
 }
+
+.special-bar-container {
+  position: fixed;
+  background: none;
+  border: 1px solid white;
+  width: 100px;
+  height: 20px;
+  margin-left: .50rem;
+  margin-top: 3rem;
+  }
+  
+  .health-bar2 {
+  display: inline-block;
+  width: 0%;
+  height: 20px;
+  background-color: blue;
+  }
