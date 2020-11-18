@@ -2,9 +2,10 @@
   "name": "cirlce-fighter",
   "version": "1.0.0",
   "description": "-TODO-",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "npm run test"
+    "test": "npm run test",
+    "start": "nodemon server/index.js"
   },
   "repository": {
     "type": "git",
