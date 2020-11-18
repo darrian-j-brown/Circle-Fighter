@@ -1,4 +1,4 @@
-import { Player, Projectile, Enemy, Boss, Particle, Shield, RapidFire, Shotgun, Shockwave } from './class.js'
+import { Player, Projectile, Enemy, Boss, Particle, Shield, RapidFire, Shotgun, Shockwave } from '../class.js'
 const canvas = document.querySelector('canvas');
 
 canvas.width = innerWidth;
