@@ -26,11 +26,6 @@ export class Player {
 
   update() {
     this.draw();
-    // Player movement
-    if (this.controls && this.controls[87]) {this.y -= 5; }
-    if (this.controls && this.controls[65]) {this.x -= 5; }
-    if (this.controls && this.controls[83]) {this.y += 5; }
-    if (this.controls && this.controls[68]) {this.x += 5; }
   }
 }
 

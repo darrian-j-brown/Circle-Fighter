@@ -324,6 +324,11 @@ function animate() {
         }
      })
   })
+
+    if (player.controls && player.controls[87]) {player.y -= 5; }
+    if (player.controls && player.controls[65]) {player.x -= 5; }
+    if (player.controls && player.controls[83]) {player.y += 5; }
+    if (player.controls && player.controls[68]) {player.x += 5; }
 }
 
 
@@ -422,12 +427,10 @@ addEventListener('keydown', function (e) {
     specialBarEl.style.width = `${specialMeter}%`
     // console.log(specialMeter);
   }
-  player.update();
 })
 
 addEventListener('keyup', function (e) {
   player.controls[e.keyCode] = false;
-  player.update();
 })
 
 
