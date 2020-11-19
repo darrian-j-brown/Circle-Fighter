@@ -52,6 +52,8 @@ export class Enemy extends Projectile{
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     context.fillStyle = this.color;
     context.fill()
+    context.strokeStyle = 'black';
+    context.stroke();
 
     //enemy tracking player
     let dx = player.x - this.x 

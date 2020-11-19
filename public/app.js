@@ -108,7 +108,7 @@ let score = 0;
 let lives;
 function animate() {
  animationId = requestAnimationFrame(animate)
-  context.fillStyle = 'rgba(0, 0, 0, 0.3)';
+  context.fillStyle = 'rgba(105, 105, 105, 0.3)';
   context.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
   particles.forEach((particle, index) => {
