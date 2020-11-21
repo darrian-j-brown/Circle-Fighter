@@ -42,7 +42,7 @@ export class Projectile extends Player {
   }
 }
 
-export class Enemy extends Projectile{
+export class Enemy extends Projectile {
   constructor (x, y, radius, color, velocity) {
     super(x, y, radius, color, velocity)
   }
@@ -52,6 +52,8 @@ export class Enemy extends Projectile{
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     context.fillStyle = this.color;
     context.fill()
+    context.strokeStyle = 'black';
+    context.stroke();
 
     //enemy tracking player
     let dx = player.x - this.x 
@@ -74,6 +76,34 @@ export class Enemy extends Projectile{
   }
 }
 
+export class GunnerEnemy extends Enemy {
+  constructor (x, y, radius, color, velocity, player) {
+    super(x, y, radius, color, velocity)
+    this.projectiles = [];
+    
+    setInterval(() => {
+      this.shoot(player);
+    }, 2000) 
+  }
+  
+
+  shoot(player) {
+    const angle = Math.atan2(player.y - this.y, player.x - this.x);
+    const velocity = {
+      x: Math.cos(angle) * 5,
+      y: Math.sin(angle) * 5
+    }
+    this.projectiles.push(new Projectile(this.x, this.y, 5, 'yellow', velocity))
+  }
+
+  update(player) {
+    this.draw(player);
+    this.projectiles.forEach((projectile) => {
+      projectile.update();
+    })
+  }
+}
+
 export class Boss extends Enemy {
   constructor (x, y, radius, color, velocity, health) {
     super(x, y, radius, color, velocity)
@@ -84,7 +114,9 @@ export class Boss extends Enemy {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     context.fillStyle = this.color;
-    context.fill()
+    context.fill();
+    context.strokeStyle = 'black';
+    context.stroke();
 
     //enemy tracking player
     let dx = player.x - this.x 

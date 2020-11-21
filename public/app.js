@@ -1,4 +1,4 @@
-import { Player, Projectile, Enemy, Boss, Particle, Shield, RapidFire, Shotgun, Shockwave } from '../class.js'
+import { Player, Projectile, Enemy, Boss, Particle, Shield, RapidFire, Shotgun, Shockwave, GunnerEnemy } from '../class.js'
 const canvas = document.querySelector('canvas');
 
 canvas.width = innerWidth;
@@ -46,7 +46,7 @@ function init() {
   kills = 0;
   livesEl.innerHTML = lives;
   scoreEl.innerHTML = score
-  bigScoreEl.innerHTML = score
+  // bigScoreEl.innerHTML = score
 }
 
 function handleEndGame() {
@@ -55,6 +55,8 @@ function handleEndGame() {
     modalEl.style.display = 'flex';
     bigScoreEl.innerHTML = score;
     // window.removeEventListener('mousedown', () => {});
+    healthBarContainer.style.display = 'none';
+    healthBarEl.style.width = `100%`;
     clearInterval(id)
     clearInterval(id2)
   }, 1000)
@@ -86,10 +88,11 @@ function spawnEnemies() {
       let health = 100
       enemies = [];
       bosses.push(new Boss(0, 0, 50, 'red', {x: 0, y: 0}, health));
-      clearInterval(id)
-      // console.log('cleared')   
+      clearInterval(id) 
     } else {
-      enemies.push(new Enemy(x, y, radius, color, velocity));
+      let enemyType = [new Enemy(x, y, radius, color, velocity), new GunnerEnemy(x, y, radius, color, velocity, player)];
+      const enemy = enemyType[Math.floor(Math.random() * enemyType.length)];
+      enemies.push(enemy);
     }
   }, 1000);
   }
@@ -108,7 +111,7 @@ let score = 0;
 let lives;
 function animate() {
  animationId = requestAnimationFrame(animate)
-  context.fillStyle = 'rgba(0, 0, 0, 0.3)';
+  context.fillStyle = 'rgba(105, 105, 105, 0.3)';
   context.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
   particles.forEach((particle, index) => {
@@ -250,6 +253,37 @@ function animate() {
         }))
       }
     }
+    if(enemy.projectiles) {
+      enemy.projectiles.forEach((enemyProjectile, enemyProjectileIndex) => {
+        const dist = Math.hypot(enemyProjectile.x - player.x, enemyProjectile.y - player.y)
+        if(dist - player.radius - enemyProjectile.radius < 1) {
+  
+          for(let i = 0; i < player.radius * 2; i++) {
+            particles.push(new Particle(enemyProjectile.x, enemyProjectile.y, Math.random() * 2, player.color, {
+              x: (Math.random() - 0.5) * (Math.random() * 6),
+              y: (Math.random() - 0.5) * (Math.random() * 6), 
+            }))
+          }
+          setTimeout(() => enemy.projectiles.splice(enemyProjectileIndex, 1), 0);
+  
+          lives -= 1;
+          livesEl.innerHTML = lives;
+  
+          if(lives === 0) {
+          
+            for(let i = 0; i < 60 * 2; i++) {
+              particles.push(new Particle(player.x, player.y, Math.random() * 2, player.color, {
+                x: (Math.random() - 0.5) * (Math.random() * 6),
+                y: (Math.random() - 0.5) * (Math.random() * 6), 
+              }))
+            }
+            player.destroy();
+            handleEndGame();
+          }
+        }
+      })
+    }
+    
 
     projectiles.forEach((projectile, projectileIndex) => {
       
@@ -355,8 +389,8 @@ function shoot(angle, angle2, angle3, angle4, angle5) {
     y: Math.sin(angle5) * 5
   }
   projectiles.push(
-    new Projectile(player.x, player.y, 5, 'white', velocity2), 
     new Projectile(player.x, player.y, 5, 'white', velocity), 
+    new Projectile(player.x, player.y, 5, 'white', velocity2), 
     new Projectile(player.x, player.y, 5, 'white', velocity3),
     new Projectile(player.x, player.y, 5, 'white', velocity4),
     new Projectile(player.x, player.y, 5, 'white', velocity5),
@@ -419,6 +453,7 @@ startGameBtn.addEventListener('click', () => {
 })
 
 addEventListener('keydown', function (e) {
+  e.preventDefault();
   player.controls = (player.controls || []);
   player.controls[e.keyCode] = true;
   if(e.keyCode === 82 && specialMeter === 100) {
@@ -430,6 +465,7 @@ addEventListener('keydown', function (e) {
 })
 
 addEventListener('keyup', function (e) {
+  e.preventDefault();
   player.controls[e.keyCode] = false;
 })
 
