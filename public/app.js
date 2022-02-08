@@ -32,6 +32,8 @@ let isDefault = true;
 let isRapidFire = false;
 let isShotgun = false;
 
+
+
 function init() {
   player = new Player(x, y, 10, 'white');
   projectiles = [];
@@ -94,7 +96,10 @@ function spawnEnemies() {
       const enemy = enemyType[Math.floor(Math.random() * enemyType.length)];
       enemies.push(enemy);
     }
-  }, 1000);
+
+    
+
+  }, 1500);
   }
 
   function spawnPowerUps() {
