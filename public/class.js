@@ -2,6 +2,7 @@ const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const healthBarContainer = document.querySelector('.health-bar-container')
 
+
 export class Player {
   constructor(x, y, radius, color) {
     this.x = x;
@@ -284,6 +285,12 @@ export class RapidFire extends Projectile {
     constructor (x, y, radius, color, velocity, health) {
       super(x, y, radius, color, velocity, health)
       this.colors = ['#800909', '#f07f13', '#f27d0c', '#757676', '#fdcf58'];
+    }
+  }
+
+  export class Weapon {
+    constructor() {
+      // Merge isRapid, isShotgun, isDefault into one class function
     }
   }
 
