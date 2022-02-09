@@ -1,6 +1,7 @@
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const healthBarContainer = document.querySelector('.health-bar-container')
+import { shoot2 } from "./handlerFunc.js";
 
 
 export class Player {
@@ -288,10 +289,38 @@ export class RapidFire extends Projectile {
     }
   }
 
-  export class Weapon {
-    constructor() {
-      // Merge isRapid, isShotgun, isDefault into one class function
-    }
-  }
 
   // Give Bosses an Id;
+  export class Weapon {
+    constructor (fireRate, element, player, mouse, interval) {
+        this.fireRate = fireRate;
+        this.element = element;
+        this.player = player;
+        this.mouse = mouse;
+        this.interval = interval;
+
+    }
+
+    shoot() {
+      if(this.fireRate === this.fireRate) {
+      this.interval = setInterval(() => { 
+        console.log('fire');
+          const angle = Math.atan2(this.mouse.y - this.player.y, this.mouse.x - this.player.x);
+          shoot2(angle)
+        
+      }, this.fireRate);
+    }
+      this.revertWeaponType();
+      return this.interval;
+    }
+    revertWeaponType() {
+      let t = setTimeout(() => {
+        window.weaponType = 200;
+        // console.log('false')
+        return () => {
+          clearTimeout(t)
+        }
+      }, 5000)
+    }
+    
+}

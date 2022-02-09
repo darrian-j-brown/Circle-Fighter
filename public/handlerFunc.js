@@ -6,7 +6,6 @@ let { canvas, player, projectiles, enemies, powerUps, bosses } = globalVal;
 let id, id2;
 
 export function shoot(angle, angle2, angle3, angle4, angle5) {
-  console.log(window.kills, 'log')
     const velocity = {
       x: Math.cos(angle) * 5,
       y: Math.sin(angle) * 5
@@ -34,6 +33,14 @@ export function shoot(angle, angle2, angle3, angle4, angle5) {
       new Projectile(player.x, player.y, 5, 'white', velocity4),
       new Projectile(player.x, player.y, 5, 'white', velocity5),
       );
+  }
+
+  export function shoot2(angle) {
+    const velocity = {
+      x: Math.cos(angle) * 5,
+      y: Math.sin(angle) * 5
+    }
+    projectiles.push(new Projectile(player.x, player.y, 5, 'white', velocity))
   }
 
   // export function handleEndGame() {
@@ -82,7 +89,7 @@ export function shoot(angle, angle2, angle3, angle4, angle5) {
         const enemy = enemyType[Math.floor(Math.random() * enemyType.length)];
         enemies.push(enemy);
       }
-    }, 3000);
+    }, 100000000);
     }
   
     export function spawnPowerUps() {
@@ -91,5 +98,5 @@ export function shoot(angle, angle2, angle3, angle4, angle5) {
         const weaponType = [new Shotgun(Math.random() * canvas.width, Math.random() * canvas.height, 10, color), new RapidFire(Math.random() * canvas.width, Math.random() * canvas.height, 10, color)]
         const weapon = weaponType[Math.floor(Math.random() * weaponType.length)];
           powerUps.push(weapon);      
-      }, 5000);
+      }, 1000);
       }

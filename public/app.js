@@ -23,7 +23,7 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 window.specialMeter = +'10';
-window.weaponType = 0;
+window.weaponType = 200;
 window.kills = 0;
 
 
@@ -147,13 +147,13 @@ function animate() {
     if(dist - powerUp.radius - player.radius < 1) {
       console.log(window.weaponType, 'og')
       if(powerUp.name === 'Rapid Fire') {
-        window.weaponType = 2;
+        window.weaponType = 100;
       } else if(powerUp.name === 'Shotgun') {
         window.weaponType = 3;
       }
       powerUps.splice(index, 1);
       let t = setTimeout(() => {
-        window.weaponType = 0;
+        window.weaponType = 200;
         // console.log('false')
         return () => {
           clearTimeout(t)
