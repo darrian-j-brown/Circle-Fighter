@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/darrian-j-brown/Circle-Fighter/issues"
   },
-  "homepage": "https://github.com/darrian-j-brown/Circle-Fighter#readme"
+  "homepage": "https://github.com/darrian-j-brown/Circle-Fighter#readme",
+  "dependencies": {
+    "howler": "^2.2.3"
+  }
 }

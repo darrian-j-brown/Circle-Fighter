@@ -1,16 +1,66 @@
-const canvas = document.querySelector('canvas');
-const context = canvas.getContext('2d');
-const healthBarContainer = document.querySelector('.health-bar-container')
-import { shoot2 } from "./handlerFunc.js";
 
+const shootAudio = new Howl({ src: ['../audio/mixkit-short-laser-gun-shot-1670.mp3']})
+const healthBarContainer = document.querySelector('.health-bar-container')
+
+
+
+const playerPng = new Image()
+playerPng.src = '../images/Jet.png';
 
 export class Player {
   constructor(x, y, radius, color) {
     this.x = x;
     this.y = y;
+    this.width = 35
+    this.height = 35
     this.radius = radius;
     this.color = color;    
     this.controls = [];
+  }
+
+  shoot(mouse) {
+    shootAudio.play();
+    const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
+    const angle2 = Math.atan2(mouse.y - this.y - 25, mouse.x - this.x - 25);
+    const angle3 = Math.atan2(mouse.y - this.y + 25, mouse.x - this.x + 25);
+    const angle4 = Math.atan2(mouse.y - this.y - 50, mouse.x - this.x - 50);
+    const angle5 = Math.atan2(mouse.y - this.y + 50, mouse.x - this.x + 50);
+
+    const velocity = {
+      x: Math.cos(angle) * 5,
+      y: Math.sin(angle) * 5
+    }
+    const velocity2 = {
+      x: Math.cos(angle2) * 5,
+      y: Math.sin(angle2) * 5
+    }
+    const velocity3 = {
+      x: Math.cos(angle3) * 5,
+      y: Math.sin(angle3) * 5
+    }
+    const velocity4 = {
+      x: Math.cos(angle4) * 5,
+      y: Math.sin(angle4) * 5
+    }
+    const velocity5 = {
+      x: Math.cos(angle5) * 5,
+      y: Math.sin(angle5) * 5
+    }
+
+    if(weaponType === 'default') {
+      projectiles.push(new Projectile(this.x, this.y, 5, 'white', velocity))
+    }
+    if(weaponType === 'RapidFire') {
+      projectiles.push(new Projectile(this.x, this.y, 5, 'blue', velocity))
+    }
+    if(weaponType === 'Shotgun') {
+      projectiles.push(new Projectile(this.x, this.y, 5, 'red', velocity))
+      projectiles.push(new Projectile(this.x, this.y, 5, 'red', velocity2))
+      projectiles.push(new Projectile(this.x, this.y, 5, 'red', velocity3))
+      projectiles.push(new Projectile(this.x, this.y, 5, 'red', velocity4))
+      projectiles.push(new Projectile(this.x, this.y, 5, 'red', velocity5))
+    }
+
   }
   
   draw() {
@@ -18,7 +68,22 @@ export class Player {
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     context.fillStyle = this.color;
     context.fill()
+
+    //<-----------code to render player as fighter jet-------->
+    // context.save()
+    // context.drawImage(playerPng, this.x, this.y, 50, 50)
+    // context.restore()
   }
+//<-----------code to rotate player image to follow cursor -------->
+  // rotate(angle) {
+  //   context.clearRect(canvas.width, canvas.height, this.x, this.y);
+  //   context.save();
+  //   context.translate(0, 0);
+  //   context.rotate(-Math.PI / 2);   // correction for image starting position
+  //   context.rotate(angle);
+  //   context.drawImage(playerPng, this.x, this.y, 50, 50);
+  //   context.restore();
+  // }
 
   destroy() {
     // removes player from screen without having to redraw
@@ -35,6 +100,12 @@ export class Projectile extends Player {
   constructor (x, y, radius, color, velocity) {
     super(x, y, radius, color)
     this.velocity = velocity;
+  }
+  draw() {
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.fillStyle = this.color;
+    context.fill()
   }
 
   update() {
@@ -192,38 +263,6 @@ export class Shield {
   }
 }
 
-export class RapidFire extends Projectile {
-  constructor (x, y, radius, color) {
-    super(x, y, radius, color)
-    this.name = 'Rapid Fire';
-  }
-  
-  draw(player) {
-    context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    context.strokeStyle = this.color;
-    context.stroke();
-    context.font = "17px Arial";
-    context.fillStyle = "white";
-    context.textAlign = 'center';
-    context.fillText(this.name, this.x, this.y);
-  }
-
-  update(player) {
-    this.draw(player);
-    this.x = this.x;
-    this.y = this.y;
-  }
-
-}
-
-  export class Shotgun extends RapidFire {
-    constructor(x, y, radius, color) {
-      super(x, y, radius, color)
-      this.name = 'Shotgun';
-    } 
-  }
-
   export class Shockwave extends Projectile {
     constructor(x, y, radius, color, velocity) {
       super(x, y, radius, color, velocity)
@@ -291,36 +330,31 @@ export class RapidFire extends Projectile {
 
 
   // Give Bosses an Id;
-  export class Weapon {
-    constructor (fireRate, element, player, mouse, interval) {
-        this.fireRate = fireRate;
-        this.element = element;
-        this.player = player;
-        this.mouse = mouse;
-        this.interval = interval;
+const names = ['RapidFire', 'Shotgun'];
+const powerUpImg = new Image()
+powerUpImg.src = './images/lightning.png';
 
-    }
+export class PowerUp {
+  constructor(x, y) {
+    this.x = x
+    this.y = y
+    this.width = 35
+    this.height = 35
+    this.radians = 0;
+    this.name = names[Math.floor(Math.random() * names.length)]
+  }
 
-    shoot() {
-      if(this.fireRate === this.fireRate) {
-      this.interval = setInterval(() => { 
-        console.log('fire');
-          const angle = Math.atan2(this.mouse.y - this.player.y, this.mouse.x - this.player.x);
-          shoot2(angle)
-        
-      }, this.fireRate);
-    }
-      this.revertWeaponType();
-      return this.interval;
-    }
-    revertWeaponType() {
-      let t = setTimeout(() => {
-        window.weaponType = 200;
-        // console.log('false')
-        return () => {
-          clearTimeout(t)
-        }
-      }, 5000)
-    }
-    
+  draw() {
+    context.save()
+    context.translate(this.x + this.width / 2, this.y + this.height / 2)
+    context.rotate(this.radians)
+    context.translate(-this.x - this.width / 2, -this.y - this.height / 2)
+    context.drawImage(powerUpImg, this.x, this.y, 35, 35)
+    context.restore()
+  }
+
+  update() {
+    this.radians += 0.05
+    this.draw()
+  }
 }

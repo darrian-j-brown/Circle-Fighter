@@ -1,56 +1,38 @@
-import { Player, Projectile, Enemy, Boss, FireBoss, Particle, Shield, RapidFire, Shotgun, Shockwave, GunnerEnemy } from '../class.js'
-import globalVal from '../globalVar.js';
-import { spawnEnemies, spawnPowerUps } from '../handlerFunc.js';
-
-let { canvas, player, projectiles, enemies, particles, bosses, powerUps, abilities, score, lives, specialBarEl, animationId, weaponType } = globalVal;
-
-// const canvas = document.querySelector('canvas');
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
-const scoreEl = document.querySelector('#scoreEl');
-const startGameBtn = document.querySelector('#startGameBtn');
-const modalEl = document.querySelector('#modalEl');
-const bigScoreEl = document.querySelector('#bigScoreEl');
-const livesEl = document.querySelector('#lives');
-const healthBarEl = document.querySelector('#bossHp')
-// const specialBarEl = document.querySelector('#special')
-const healthBarContainer = document.querySelector('#BossContainer');
-
-const context = canvas.getContext('2d');
+import { Player, Particle } from './helpers/class.js'
+import { spawnEnemies, spawnPowerUps } from './helpers/handlerFunc.js';
+const backgroundMusicAudio = new Audio('../audio/rave digger.mp3')
+backgroundMusicAudio.loop = true
 
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
-window.specialMeter = +'10';
-window.weaponType = 200;
-window.kills = 0;
-
-
 // Function needed to restart game
 function init() {
-  // player = new Player(x, y, 10, 'white');
-  // projectiles = [];
-  // enemies = [];
-  // powerUps = [];
-  // bosses = [];
-  // particles = [];
-  // abilities = [];
-  // specialMeter = +'10';
-  // score = 0;
-  // lives = 3;
-  // kills = 0;
+  isGameActive = true;
+  player = new Player(x, y, 10, 'white');
+  projectiles = [];
+  enemies = [];
+  powerUps = [];
+  bosses = [];
+  particles = [];
+  abilities = [];
+  weaponType = 'default';
+  //for testing purpose value has been set to 50 from 10;
+  specialMeter = +'50';
+  score = 0;
+  lives = 3;
+  kills = 0;
   livesEl.innerHTML = lives;
   scoreEl.innerHTML = score
-  // bigScoreEl.innerHTML = score
+  bigScoreEl.innerHTML = score
 }
 let id, id2;
 function handleEndGame() {
   setTimeout(() => {
     cancelAnimationFrame(animationId);
+    isGameActive = false;
     modalEl.style.display = 'flex';
     bigScoreEl.innerHTML = score;
-    // window.removeEventListener('mousedown', () => {});
     healthBarContainer.style.display = 'none';
     healthBarEl.style.width = `100%`;
     clearInterval(id)
@@ -58,11 +40,21 @@ function handleEndGame() {
   }, 1000)
 }
 
+let frame = 0
 function animate() {
  animationId = requestAnimationFrame(animate)
+ frame++;
   context.fillStyle = 'rgba(105, 105, 105, 0.3)';
   context.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
+  
+  if (weaponType === 'RapidFire' && mouse.down) {
+    if (frame % 4 === 0) {
+      player.shoot(mouse)
+      console.log('auto fire')
+    }
+  }
+
   particles.forEach((particle, index) => {
     particle.alpha <= 0 ? particles.splice(index, 1) : particle.update();
   })
@@ -141,24 +133,21 @@ function animate() {
   })
 
   powerUps.forEach((powerUp, index) => {
-    powerUp.draw(player)
+    powerUp.update();
     const dist = Math.hypot(player.x - powerUp.x, player.y - powerUp.y)
 
-    if(dist - powerUp.radius - player.radius < 1) {
-      console.log(window.weaponType, 'og')
-      if(powerUp.name === 'Rapid Fire') {
-        window.weaponType = 100;
+    if(dist - player.radius - powerUp.width / 2 < 1) {
+      console.log(weaponType, 'og')
+      if(powerUp.name === 'RapidFire') {
+        weaponType = 'RapidFire';
       } else if(powerUp.name === 'Shotgun') {
-        window.weaponType = 3;
+        weaponType = 'Shotgun';
       }
       powerUps.splice(index, 1);
-      let t = setTimeout(() => {
-        window.weaponType = 200;
-        // console.log('false')
-        return () => {
-          clearTimeout(t)
-        }
-      }, 10000)
+      setTimeout(() => {
+        weaponType = 'default';
+      }, 7000)
+      //powerUp lasts for 7 seconds // needs improvement
     }
   })
   
@@ -255,12 +244,13 @@ function animate() {
           setTimeout(() => projectiles.splice(projectileIndex, 1), 0);
         } else {
           // remove from scene altogether
-          window.kills += 1;
-          if(window.specialMeter !== 100) {
-            window.specialMeter += +'10';
+          kills += 1;
+          console.log(kills, 'kill counter')
+          if(specialMeter !== 100) {
+            specialMeter += +'10';
           };
 
-          specialBarEl.style.width = `${window.specialMeter}%`
+          specialBarEl.style.width = `${specialMeter}%`
           // console.log(specialMeter)
           score += 100;
           scoreEl.innerHTML = score;
@@ -286,7 +276,7 @@ function animate() {
     enemies.forEach((enemy, index) => {
       const Abilitydist = Math.hypot(ability.x - enemy.x, ability.y - enemy.y);
       if(Abilitydist - enemy.radius - ability.radius < 1) {
-          window.kills += 1;
+          kills += 1;
           score += 500;
           scoreEl.innerHTML = score;
 
@@ -315,7 +305,14 @@ startGameBtn.addEventListener('click', () => {
   spawnEnemies();
   spawnPowerUps();
   modalEl.style.display = 'none';
+  // backgroundMusicAudio.play() 
+  // muted for demo purposes
 })
 
+addEventListener('resize', () => {
+  canvas.width = innerWidth
+  canvas.height = innerHeight
+  init()
+})
 
 
