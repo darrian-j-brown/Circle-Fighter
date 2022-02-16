@@ -34,7 +34,7 @@ let id, id2;
         const enemy = enemyType[Math.floor(Math.random() * enemyType.length)];
         enemies.push(enemy);
       }
-    }, 3000000);
+    }, 4000);
     }
   
   export function spawnPowerUps() {
@@ -42,14 +42,14 @@ let id, id2;
       const color = `white`;
       const weapon = new PowerUp(Math.random() * canvas.width, Math.random() * canvas.height, 10, color)
         powerUps.push(weapon);      
-    }, 3000);
+    }, 8000);
     }
     
   var timer;
   export function endAndStartTimer() {
-  window.clearTimeout(timer);
+  clearTimeout(timer);
   var waitTime = 3000; 
-  timer = window.setTimeout(function() {
+  timer = setTimeout(function() {
     weaponType = "default";
   }, waitTime); 
 }
