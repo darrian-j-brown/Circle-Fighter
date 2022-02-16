@@ -32,15 +32,40 @@ let id, id2;
       } else {
         let enemyType = [new Enemy(x, y, radius, color, velocity), new GunnerEnemy(x, y, radius, color, velocity, player)];
         const enemy = enemyType[Math.floor(Math.random() * enemyType.length)];
-        enemies.push(enemy);
+        if(enemy.name === "gunner" && deviceType() === 'mobile') {
+          let mobileFriendlyEnemy = new Enemy(x, y, radius, color, velocity);
+          enemies.push(mobileFriendlyEnemy)
+        } else {
+          enemies.push(enemy);
+        }
       }
-    }, 3000);
+    }, 4000);
     }
   
-    export function spawnPowerUps() {
-      id2 = setInterval(() => {
-        const color = `white`;
-        const weapon = new PowerUp(Math.random() * canvas.width, Math.random() * canvas.height, 10, color)
-          powerUps.push(weapon);      
-      }, 7000);
-      }
+  export function spawnPowerUps() {
+    id2 = setInterval(() => {
+      const color = `white`;
+      const weapon = new PowerUp(Math.random() * canvas.width, Math.random() * canvas.height, 10, color)
+        powerUps.push(weapon);      
+    }, 5000);
+    }
+    
+  var timer;
+  export function endAndStartTimer() {
+  clearTimeout(timer);
+  var waitTime = 5000; 
+  timer = setTimeout(function() {
+    weaponType = "default";
+  }, waitTime); 
+}
+
+export const deviceType = () => {
+  const ua = navigator.userAgent;
+  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+      return "tablet";
+  }
+  else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+      return "mobile";
+  }
+  return "desktop";
+};

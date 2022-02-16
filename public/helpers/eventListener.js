@@ -8,8 +8,24 @@ addEventListener('click', () => {
   if (weaponType !== 100 && isGameActive) {
     player.shoot(mouse)
   }
-
 });
+
+addEventListener('touchstart', (e) => {
+  mouse.x = e.touches[0].clientX
+  mouse.y = e.touches[0].clientY
+  player.shoot(mouse)
+  mouse.down = true
+  
+})
+
+addEventListener('touchmove', (e) => {
+  mouse.x = e.touches[0].clientX
+  mouse.y = e.touches[0].clientY
+})
+
+addEventListener('touchend', () => {
+  mouse.down = false
+})
 
 
 addEventListener('mousedown', () => {

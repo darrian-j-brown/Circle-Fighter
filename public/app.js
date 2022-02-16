@@ -1,5 +1,5 @@
 import { Player, Particle } from './helpers/class.js'
-import { spawnEnemies, spawnPowerUps } from './helpers/handlerFunc.js';
+import { spawnEnemies, spawnPowerUps, endAndStartTimer, deviceType } from './helpers/handlerFunc.js';
 const backgroundMusicAudio = new Audio('../audio/rave digger.mp3')
 backgroundMusicAudio.loop = true
 
@@ -26,6 +26,9 @@ function init() {
   scoreEl.innerHTML = score
   bigScoreEl.innerHTML = score
 }
+
+
+
 let id, id2;
 function handleEndGame() {
   setTimeout(() => {
@@ -135,19 +138,25 @@ function animate() {
   powerUps.forEach((powerUp, index) => {
     powerUp.update();
     const dist = Math.hypot(player.x - powerUp.x, player.y - powerUp.y)
+    const mobile_dist = Math.hypot(mouse.x - powerUp.x, mouse.y - powerUp.y)
 
     if(dist - player.radius - powerUp.width / 2 < 1) {
-      console.log(weaponType, 'og')
       if(powerUp.name === 'RapidFire') {
         weaponType = 'RapidFire';
       } else if(powerUp.name === 'Shotgun') {
         weaponType = 'Shotgun';
       }
       powerUps.splice(index, 1);
-      setTimeout(() => {
-        weaponType = 'default';
-      }, 7000)
+      endAndStartTimer();
       //powerUp lasts for 7 seconds // needs improvement
+    } else if(mobile_dist - mouse.radius - powerUp.width / 2 < 1 && deviceType() === 'mobile') {
+      if(powerUp.name === 'RapidFire') {
+        weaponType = 'RapidFire';
+      } else if(powerUp.name === 'Shotgun') {
+        weaponType = 'Shotgun';
+      }
+      powerUps.splice(index, 1);
+      endAndStartTimer();
     }
   })
   
@@ -292,6 +301,8 @@ function animate() {
         }
      })
   })
+
+  
 
     if (player.controls && player.controls[87]) {player.y -= 5; }
     if (player.controls && player.controls[65]) {player.x -= 5; }
