@@ -153,6 +153,7 @@ export class GunnerEnemy extends Enemy {
   constructor (x, y, radius, color, velocity, player) {
     super(x, y, radius, color, velocity)
     this.projectiles = [];
+    this.name = 'gunner';
     
     setInterval(() => {
       this.shoot(player);

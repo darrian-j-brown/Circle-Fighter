@@ -11,6 +11,8 @@ html, body {
   margin: 0;
   background: #696969;
   cursor: crosshair;
+  overflow: hidden;
+  
   /* font-family: raleway; */
 }
 
@@ -124,3 +126,5 @@ background-color: #33ee33;
   .dropdown:hover .dropbtn {
     background-color: blue;
   }
+
+  
