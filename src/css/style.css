@@ -4,12 +4,13 @@
   padding:0;
 }
 
+
 html, body {
   /* set to full screen */
   width:100%;
   height:100%;
   margin: 0;
-  background: #696969;
+  background: black;
   cursor: crosshair;
   overflow: hidden;
   
@@ -19,6 +20,8 @@ html, body {
 canvas {
   /* remove the scrollbars */
   display:block;
+  width: 100%;
+  height: 100%;
 }
 
 .lives {
