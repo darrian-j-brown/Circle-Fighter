@@ -1,5 +1,5 @@
-import { Player } from "./components/player.js";
-import { Particle } from "./components/particle.js";
+import { Player } from "./components/Player.js";
+import { Particle } from "./components/Particle.js";
 import {
   spawnEnemies,
   spawnPowerUps,
@@ -45,8 +45,6 @@ function handleEndGame() {
     isGameActive = false;
     modalEl.style.display = "flex";
     bigScoreEl.innerHTML = score;
-    healthBarContainer.style.display = "none";
-    healthBarEl.style.width = `100%`;
     clearInterval(id);
     clearInterval(id2);
   }, 1000);
@@ -130,7 +128,6 @@ function animate() {
 
         if (boss.health - 1 > 1) {
           boss.health -= 1;
-          healthBarEl.style.width = `${boss.health}%`;
           score += 100;
           scoreEl.innerHTML = score;
 
@@ -142,7 +139,6 @@ function animate() {
         } else {
           setTimeout(() => {
             bosses.splice(index, 1);
-            healthBarEl.style.width = `${100}%`;
             projectiles.splice(projectileIndex, 1);
           }, 0);
           handleEndGame();

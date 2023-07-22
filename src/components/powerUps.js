@@ -1,4 +1,4 @@
-import { Projectile } from "./player.js";
+import { Projectile } from "./Player.js";
 
 export class Shockwave extends Projectile {
   constructor(x, y, radius, color, velocity) {
@@ -22,11 +22,11 @@ export class Shockwave extends Projectile {
 }
 
 export class Shield {
-  constructor(radius, color, opacity) {
+  constructor(radius, color, opacity, player) {
     this.radius = radius;
     this.color = color;
     this.opacity = opacity;
-    this.player = null;
+    this.player = player;
   }
 
   attach(player) {

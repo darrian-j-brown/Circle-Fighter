@@ -1,7 +1,6 @@
-import { Enemy } from "./enemies.js";
-import { Projectile } from "./player.js";
-import { Particle } from "./particle.js";
-const healthBarContainer = document.querySelector(".health-bar-container");
+import { Enemy } from "./Enemies.js";
+import { Projectile } from "./Player.js";
+import { Particle } from "./Particle.js";
 
 export class Boss extends Enemy {
   constructor(x, y, radius, color, velocity, health) {
@@ -11,6 +10,8 @@ export class Boss extends Enemy {
     this.speed = 0.5;
     this.damage = 1;
     this.shootInterval = null;
+    this.healthBarWidth = 100; // Width of the health bar (you can adjust this value)
+    this.healthBarHeight = 10; // Height of the health bar (you can adjust this value)
   }
 
   shoot(player) {
@@ -24,8 +25,38 @@ export class Boss extends Enemy {
     projectiles.push(new Projectile(this.x, this.y, 5, "yellow", velocity));
   }
 
+  drawHealthBar() {
+    const remainingHealthPercentage = this.health / this.maxHealth;
+    const healthBarWidth = 100; // Width of the health bar (you can adjust this value)
+    const healthBarHeight = 10; // Height of the health bar (you can adjust this value)
+
+    // Calculate health bar position above the boss
+    const healthBarX = this.x - healthBarWidth / 2;
+    const healthBarY = this.y - this.radius - 20; // Adjust this value for desired spacing
+
+    // Draw the background of the health bar
+    context.beginPath();
+    context.rect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+    context.fillStyle = "red";
+    context.fill();
+    context.closePath();
+
+    // Draw the remaining health
+    context.beginPath();
+    context.rect(
+      healthBarX,
+      healthBarY,
+      healthBarWidth * remainingHealthPercentage,
+      healthBarHeight
+    );
+    context.fillStyle = "yellow";
+    context.fill();
+    context.closePath();
+  }
+
   update(player) {
     this.draw(player);
+    this.drawHealthBar();
 
     // Adjust boss difficulty based on remaining health
     const remainingHealthPercentage = this.health / this.maxHealth;

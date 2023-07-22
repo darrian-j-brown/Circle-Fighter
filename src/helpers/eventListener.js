@@ -1,4 +1,4 @@
-import { Shockwave } from "../components/powerUps.js";
+import { Shockwave, Shield } from "../components/PowerUps.js";
 const shootAudio = new Howl({
   src: ["../audio/mixkit-space-plasma-shot-3002.mp3"],
 });

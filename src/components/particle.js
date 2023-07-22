@@ -1,4 +1,4 @@
-import { Projectile } from "./player.js";
+import { Projectile } from "./Player.js";
 
 export class Particle extends Projectile {
   constructor(x, y, radius, color, velocity) {
