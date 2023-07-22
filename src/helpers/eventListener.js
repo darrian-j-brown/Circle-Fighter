@@ -7,7 +7,7 @@ let i, i2, i3;
 
 addEventListener("click", () => {
   if (weaponType !== 100 && isGameActive) {
-    player.shoot(mouse);
+    player.shoot(mouse, "default");
   }
 });
 

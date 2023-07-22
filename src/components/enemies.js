@@ -1,8 +1,12 @@
-import { Projectile } from "./Player.js";
+import { Projectile } from "./Projectile.js";
 
-export class Enemy extends Projectile {
+export class Enemy {
   constructor(x, y, radius, color, velocity) {
-    super(x, y, radius, color, velocity);
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.velocity = velocity;
   }
 
   draw(player) {

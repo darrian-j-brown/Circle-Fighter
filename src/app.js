@@ -51,6 +51,7 @@ function handleEndGame() {
 }
 
 let frame = 0;
+let isLaserFiring = false;
 function animate() {
   animationId = requestAnimationFrame(animate);
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -59,7 +60,7 @@ function animate() {
   context.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
 
-  if (weaponType === "RapidFire" && mouse.down && frame % 4 === 0) {
+  if (player.weaponType === "RapidFire" && mouse.down && frame % 4 === 0) {
     player.shoot(mouse);
     console.log("auto fire");
   }
@@ -155,9 +156,9 @@ function animate() {
 
     if (dist - player.radius - powerUp.width / 2 < 1) {
       if (powerUp.name === "RapidFire") {
-        weaponType = "RapidFire";
+        player.weaponType = "RapidFire";
       } else if (powerUp.name === "Shotgun") {
-        weaponType = "Shotgun";
+        player.weaponType = "Shotgun";
       }
 
       powerUps.splice(index, 1);
@@ -167,9 +168,9 @@ function animate() {
       mobileDist - mouse.radius - powerUp.width / 2 < 1
     ) {
       if (powerUp.name === "RapidFire") {
-        weaponType = "RapidFire";
+        player.weaponType = "RapidFire";
       } else if (powerUp.name === "Shotgun") {
-        weaponType = "Shotgun";
+        player.weaponType = "Shotgun";
       }
 
       powerUps.splice(index, 1);
@@ -345,17 +346,19 @@ function animate() {
     });
   });
 
-  if (player.controls && player.controls[87]) {
-    player.y -= 5;
-  }
-  if (player.controls && player.controls[65]) {
-    player.x -= 5;
-  }
-  if (player.controls && player.controls[83]) {
-    player.y += 5;
-  }
-  if (player.controls && player.controls[68]) {
-    player.x += 5;
+  if (player.controls) {
+    if (player.controls[87]) {
+      player.y -= 5;
+    }
+    if (player.controls[65]) {
+      player.x -= 5;
+    }
+    if (player.controls[83]) {
+      player.y += 5;
+    }
+    if (player.controls[68]) {
+      player.x += 5;
+    }
   }
 }
 

@@ -1,3 +1,5 @@
+import { Projectile, Shotgun, RapidFire } from "./Projectile.js";
+
 const shootAudio = new Howl({
   src: ["../audio/mixkit-short-laser-gun-shot-1670.mp3"],
 });
@@ -14,32 +16,30 @@ export class Player {
     this.radius = radius;
     this.color = color;
     this.controls = [];
+    this.weaponType = "default";
   }
 
   shoot(mouse) {
     shootAudio.play();
-    const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
-    const velocity = {
-      x: Math.cos(angle) * 10,
-      y: Math.sin(angle) * 10,
-    };
 
-    if (weaponType === "default") {
-      projectiles.push(new Projectile(this.x, this.y, 5, "green", velocity));
-    } else if (weaponType === "RapidFire") {
-      projectiles.push(new Projectile(this.x, this.y, 5, "blue", velocity));
-    } else if (weaponType === "Shotgun") {
-      const velocities = [
-        { x: Math.cos(angle) * 5, y: Math.sin(angle) * 5 },
-        { x: Math.cos(angle - 0.1) * 5, y: Math.sin(angle - 0.1) * 5 },
-        { x: Math.cos(angle + 0.1) * 5, y: Math.sin(angle + 0.1) * 5 },
-        { x: Math.cos(angle - 0.2) * 5, y: Math.sin(angle - 0.2) * 5 },
-        { x: Math.cos(angle + 0.2) * 5, y: Math.sin(angle + 0.2) * 5 },
-      ];
-
-      velocities.forEach((velocity) => {
-        projectiles.push(new Projectile(this.x, this.y, 5, "red", velocity));
-      });
+    if (this.weaponType === "default") {
+      projectiles.push(
+        new Projectile(
+          this.x,
+          this.y,
+          5,
+          "green",
+          this.getVelocity(mouse),
+          this.color,
+          mouse
+        )
+      );
+    } else if (this.weaponType === "RapidFire") {
+      const rapidFire = new RapidFire(this.x, this.y, this.color, mouse);
+      rapidFire.shoot(projectiles);
+    } else if (this.weaponType === "Shotgun") {
+      const shotgun = new Shotgun(this.x, this.y, this.color, mouse);
+      shotgun.shoot(projectiles);
     }
   }
 
@@ -66,53 +66,12 @@ export class Player {
   update() {
     this.draw();
   }
-}
 
-export class Projectile extends Player {
-  constructor(x, y, radius, color, velocity) {
-    super(x, y, radius, color);
-    this.velocity = velocity;
-  }
-  draw() {
-    context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    context.fillStyle = this.color;
-    context.fill();
-  }
-
-  update() {
-    this.draw();
-    this.x = this.x + this.velocity.x;
-    this.y = this.y + this.velocity.y;
-  }
-}
-
-export class LaserBeam extends Projectile {
-  constructor(x, y, width, height, color, velocity) {
-    super(x, y, width, height, color, velocity);
-    this.duration = 1000; // Duration of the laser beam in milliseconds
-  }
-
-  draw() {
-    context.fillStyle = this.color;
-    context.fillRect(this.x, this.y, this.width, this.height);
-  }
-
-  update() {
-    this.draw();
-    this.move();
-    this.duration -= deltaTime;
-
-    if (this.duration <= 0) {
-      this.destroy();
-    }
-  }
-
-  destroy() {
-    // Remove the laser beam from the projectiles array
-    const index = projectiles.indexOf(this);
-    if (index !== -1) {
-      projectiles.splice(index, 1);
-    }
+  getVelocity(mouse) {
+    const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
+    return {
+      x: Math.cos(angle) * 10,
+      y: Math.sin(angle) * 10,
+    };
   }
 }

@@ -1,10 +1,10 @@
-import { Projectile } from "./Player.js";
+import { Projectile } from "./Projectile.js";
 
 export class Particle extends Projectile {
   constructor(x, y, radius, color, velocity) {
     super(x, y, radius, color, velocity);
     this.alpha = 1;
-    this.friction = 0.99;
+    this.friction = 0.98;
   }
 
   draw() {

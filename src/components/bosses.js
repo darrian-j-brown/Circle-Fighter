@@ -1,10 +1,13 @@
-import { Enemy } from "./Enemies.js";
-import { Projectile } from "./Player.js";
+import { Projectile } from "./Projectile.js";
 import { Particle } from "./Particle.js";
 
-export class Boss extends Enemy {
+export class Boss {
   constructor(x, y, radius, color, velocity, health) {
-    super(x, y, radius, color, velocity);
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.velocity = velocity;
     this.health = health;
     this.maxHealth = health;
     this.speed = 0.5;
@@ -52,6 +55,31 @@ export class Boss extends Enemy {
     context.fillStyle = "yellow";
     context.fill();
     context.closePath();
+  }
+
+  draw(player) {
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.fillStyle = this.color;
+    context.fill();
+    context.lineWidth = 3.5;
+    context.strokeStyle = "black";
+    context.stroke();
+
+    // Enemy tracking player
+    const dx = player.x - this.x;
+    const dy = player.y - this.y;
+    const angle = Math.atan2(dy, dx);
+    const speed = 1;
+
+    // Calculate velocity towards the player
+    const velocity = {
+      x: Math.cos(angle) * speed,
+      y: Math.sin(angle) * speed,
+    };
+
+    this.x += velocity.x;
+    this.y += velocity.y;
   }
 
   update(player) {
