@@ -1,7 +1,6 @@
 const shootAudio = new Howl({
   src: ["../audio/mixkit-short-laser-gun-shot-1670.mp3"],
 });
-const healthBarContainer = document.querySelector(".health-bar-container");
 
 const playerPng = new Image();
 playerPng.src = "../images/Jet.png";

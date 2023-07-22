@@ -1,5 +1,7 @@
 import { Enemy } from "./enemies.js";
 import { Projectile } from "./player.js";
+import { Particle } from "./particle.js";
+const healthBarContainer = document.querySelector(".health-bar-container");
 
 export class Boss extends Enemy {
   constructor(x, y, radius, color, velocity, health) {
