@@ -31,3 +31,33 @@ export class Particle extends Projectile {
     }
   }
 }
+
+export class ParticleExplosion extends Particle {
+  constructor(x, y, color, particles) {
+    super(x, y, 3, color, { x: 0, y: 0 });
+    this.particles = particles;
+    this.particleCount = 400; // Adjust the number of particles in the explosion
+    this.duration = 3500; // Duration of the explosion in milliseconds
+  }
+
+  update(deltaTime) {
+    this.duration -= deltaTime;
+    if (this.duration <= 0) {
+      this.particles = []; // Clear particles after the explosion duration
+    }
+
+    this.particles.forEach((particle, index) => {
+      if (particle.alpha <= 0) {
+        this.particles.splice(index, 1);
+      } else {
+        particle.update();
+      }
+    });
+  }
+
+  draw() {
+    this.particles.forEach((particle) => {
+      particle.draw();
+    });
+  }
+}

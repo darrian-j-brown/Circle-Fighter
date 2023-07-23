@@ -138,3 +138,73 @@ export class RapidFire {
 //     }
 //   }
 // }
+
+export class LaserBeam {
+  constructor(x, y, width, height, color, velocity, duration) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.color = color;
+    this.velocity = velocity;
+    this.duration = duration; // Duration of the laser beam in milliseconds
+  }
+
+  draw() {
+    console.log(this.velocity);
+    // Calculate the end point of the laser beam based on its velocity and duration
+    const endPointX = this.x + this.velocity.x * this.duration;
+    const endPointY = this.y + this.velocity.y * this.duration;
+    // Create a gradient for the laser beam
+    const gradient = context.createLinearGradient(
+      this.x,
+      this.y,
+      endPointX,
+      endPointY
+    );
+    gradient.addColorStop(0, "transparent"); // Start with a transparent color
+    gradient.addColorStop(0.5, this.color); // Middle with the actual color
+    gradient.addColorStop(1, "transparent"); // End with a transparent color
+
+    // Draw the laser beam as a line with the gradient stroke style
+    context.strokeStyle = gradient;
+    context.lineWidth = 10; // Adjust the width of the laser beam
+    context.lineCap = "round"; // Add rounded line caps for a smoother appearance
+    context.beginPath();
+    context.moveTo(this.x, this.y);
+    context.lineTo(endPointX, endPointY);
+    context.stroke();
+
+    // Draw two additional lines that wrap around the original laser beam
+    context.strokeStyle = "rgba(255, 255, 255, 0.5)"; // Set color for the wrapping lines
+    context.lineWidth = 4; // Adjust the width of the wrapping lines
+    context.beginPath();
+    context.moveTo(this.x - 10, this.y);
+    context.lineTo(endPointX - 10, endPointY);
+    context.stroke();
+
+    context.beginPath();
+    context.moveTo(this.x + 10, this.y);
+    context.lineTo(endPointX + 10, endPointY);
+    context.stroke();
+  }
+
+  update(deltaTime, projectiles) {
+    this.draw();
+    this.x = this.x + this.velocity.x;
+    this.y = this.y + this.velocity.y;
+    this.duration -= deltaTime;
+
+    if (this.duration <= 0) {
+      this.destroy(projectiles);
+    }
+  }
+
+  destroy() {
+    // Remove the laser beam from the projectiles array
+    const index = projectiles.indexOf(this);
+    if (index !== -1) {
+      projectiles.splice(index, 1);
+    }
+  }
+}

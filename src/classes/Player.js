@@ -1,11 +1,11 @@
-import { Projectile, Shotgun, RapidFire } from "./Projectile.js";
+import { Projectile, Shotgun, RapidFire, LaserBeam } from "./Projectile.js";
 
 const shootAudio = new Howl({
   src: ["../audio/mixkit-short-laser-gun-shot-1670.mp3"],
 });
 
 const playerPng = new Image();
-playerPng.src = "../images/Jet.png";
+playerPng.src = "../images/f22SVG.png";
 
 export class Player {
   constructor(x, y, radius, color) {
@@ -40,6 +40,17 @@ export class Player {
     } else if (this.weaponType === "Shotgun") {
       const shotgun = new Shotgun(this.x, this.y, this.color, mouse);
       shotgun.shoot(projectiles);
+    } else if (this.weaponType === "LaserBeam") {
+      const laserBeam = new LaserBeam(
+        this.x,
+        this.y,
+        10,
+        10,
+        "blue",
+        this.getVelocity(mouse),
+        10000
+      );
+      projectiles.push(laserBeam); // Add the laser beam instance to the projectiles array
     }
   }
 

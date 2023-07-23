@@ -1,5 +1,5 @@
-import { Player } from "./components/Player.js";
-import { Particle } from "./components/Particle.js";
+import { Player } from "./classes/Player.js";
+import { Particle, ParticleExplosion } from "./classes/Particle.js";
 import {
   spawnEnemies,
   spawnPowerUps,
@@ -52,6 +52,9 @@ function handleEndGame() {
 
 let frame = 0;
 let isLaserFiring = false;
+let lastTime = 0;
+let currentTime = 0;
+
 function animate() {
   animationId = requestAnimationFrame(animate);
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -59,6 +62,8 @@ function animate() {
   context.fillStyle = "gray";
   context.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
+  const deltaTime = (currentTime - lastTime) / 1000;
+  lastTime = currentTime;
 
   if (player.weaponType === "RapidFire" && mouse.down && frame % 4 === 0) {
     player.shoot(mouse);
@@ -74,7 +79,7 @@ function animate() {
   });
 
   projectiles.forEach((projectile, index) => {
-    projectile.update();
+    projectile.update(deltaTime, projectiles);
 
     if (
       projectile.x - projectile.radius < 0 ||
@@ -87,7 +92,8 @@ function animate() {
   });
 
   bosses.forEach((boss, index) => {
-    boss.update(player);
+    boss.draw(player);
+    boss.update(player, projectiles);
 
     const bossDist = Math.hypot(player.x - boss.x, player.y - boss.y);
     if (bossDist - boss.radius - player.radius < 1) {
@@ -110,20 +116,12 @@ function animate() {
 
     projectiles.forEach((projectile, projectileIndex) => {
       const bossDist = Math.hypot(projectile.x - boss.x, projectile.y - boss.y);
+      projectile.update();
 
       if (bossDist - boss.radius - projectile.radius < 1) {
         for (let i = 0; i < 10 * 2; i++) {
           particles.push(
-            new Particle(
-              projectile.x,
-              projectile.y,
-              Math.random() * 2,
-              boss.color,
-              {
-                x: (Math.random() - 0.5) * (Math.random() * 6),
-                y: (Math.random() - 0.5) * (Math.random() * 6),
-              }
-            )
+            new ParticleExplosion(boss.x, boss.y, boss.color, particles)
           );
         }
 
