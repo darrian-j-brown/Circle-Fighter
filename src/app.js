@@ -121,7 +121,10 @@ function animate() {
       if (bossDist - boss.radius - projectile.radius < 1) {
         for (let i = 0; i < 10 * 2; i++) {
           particles.push(
-            new ParticleExplosion(boss.x, boss.y, boss.color, particles)
+            new Particle(boss.x, boss.y, boss.color, {
+              x: (Math.random() - 0.5) * (Math.random() * 6),
+              y: (Math.random() - 0.5) * (Math.random() * 6),
+            })
           );
         }
 

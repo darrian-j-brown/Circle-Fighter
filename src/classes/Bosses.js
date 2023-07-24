@@ -1,5 +1,5 @@
 import { Projectile } from "./Projectile.js";
-import { Particle, ParticleExplosion } from "./Particle.js";
+import { Particle } from "./Particle.js";
 
 export class Boss {
   constructor(x, y, radius, color, velocity, health) {
@@ -182,90 +182,90 @@ export class FireBoss extends IceBoss {
   }
 }
 
-export class BlackHoleBoss extends Boss {
-  constructor(x, y, radius, color) {
-    super(x, y, radius, color);
-    this.health = 1; // Boss's health
-    this.projectileAttractionRadius = 300; // Radius within which projectiles are attracted
-    this.playerAttractionRadius = 400; // Radius within which player is attracted
-    this.damageAuraRadius = 50; // Radius of the damaging aura around the boss
-    this.damageAuraDamage = 1; // Amount of damage caused by the damaging aura
-  }
+// export class BlackHoleBoss extends Boss {
+//   constructor(x, y, radius, color) {
+//     super(x, y, radius, color);
+//     this.health = 1; // Boss's health
+//     this.projectileAttractionRadius = 300; // Radius within which projectiles are attracted
+//     this.playerAttractionRadius = 400; // Radius within which player is attracted
+//     this.damageAuraRadius = 50; // Radius of the damaging aura around the boss
+//     this.damageAuraDamage = 1; // Amount of damage caused by the damaging aura
+//   }
 
-  attractProjectiles(projectiles) {
-    projectiles.forEach((projectile, index) => {
-      const distance = Math.hypot(projectile.x - this.x, projectile.y - this.y);
+//   attractProjectiles(projectiles) {
+//     projectiles.forEach((projectile, index) => {
+//       const distance = Math.hypot(projectile.x - this.x, projectile.y - this.y);
 
-      if (distance < this.projectileAttractionRadius) {
-        const angle = Math.atan2(this.y - projectile.y, this.x - projectile.x);
-        projectile.velocity.x += Math.cos(angle) * 1.5;
-        projectile.velocity.y += Math.sin(angle) * 1.5;
-      }
+//       if (distance < this.projectileAttractionRadius) {
+//         const angle = Math.atan2(this.y - projectile.y, this.x - projectile.x);
+//         projectile.velocity.x += Math.cos(angle) * 1.5;
+//         projectile.velocity.y += Math.sin(angle) * 1.5;
+//       }
 
-      if (distance < this.radius + projectile.radius) {
-        projectiles.splice(index, 1);
-      }
-    });
-  }
+//       if (distance < this.radius + projectile.radius) {
+//         projectiles.splice(index, 1);
+//       }
+//     });
+//   }
 
-  attractPlayer(player) {
-    const distance = Math.hypot(player.x - this.x, player.y - this.y);
+//   attractPlayer(player) {
+//     const distance = Math.hypot(player.x - this.x, player.y - this.y);
 
-    if (distance < this.playerAttractionRadius) {
-      const angle = Math.atan2(this.y - player.y, this.x - player.x);
-      player.x += Math.cos(angle) * 0.2;
-      player.y += Math.sin(angle) * 0.2;
-    }
-  }
+//     if (distance < this.playerAttractionRadius) {
+//       const angle = Math.atan2(this.y - player.y, this.x - player.x);
+//       player.x += Math.cos(angle) * 0.2;
+//       player.y += Math.sin(angle) * 0.2;
+//     }
+//   }
 
-  damageAura(player) {
-    const distance = Math.hypot(player.x - this.x, player.y - this.y);
+//   damageAura(player) {
+//     const distance = Math.hypot(player.x - this.x, player.y - this.y);
 
-    if (distance < this.damageAuraRadius) {
-      player.takeDamage(this.damageAuraDamage);
-    }
-  }
+//     if (distance < this.damageAuraRadius) {
+//       player.takeDamage(this.damageAuraDamage);
+//     }
+//   }
 
-  takeDamage(damage, particles) {
-    this.health -= damage;
+//   takeDamage(damage, particles) {
+//     this.health -= damage;
 
-    // Add visual effect when boss takes damage (e.g., flash effect)
-    const flashColor = "red"; // Color to use for the flash effect
-    const originalColor = this.color; // Store the original color
+//     // Add visual effect when boss takes damage (e.g., flash effect)
+//     const flashColor = "red"; // Color to use for the flash effect
+//     const originalColor = this.color; // Store the original color
 
-    // Set the boss's color to the flash color
-    this.color = flashColor;
+//     // Set the boss's color to the flash color
+//     this.color = flashColor;
 
-    // After a short delay, revert the boss's color back to the original color
-    setTimeout(() => {
-      this.color = originalColor;
-    }, 100);
+//     // After a short delay, revert the boss's color back to the original color
+//     setTimeout(() => {
+//       this.color = originalColor;
+//     }, 100);
 
-    // Add other visual effects here if needed
+//     // Add other visual effects here if needed
 
-    if (this.health <= 0) {
-      // Add explosion animation when boss has no health
-      const explosionColor = "orange"; // Color for the explosion particles
-      const explosion = new ParticleExplosion(this.x, this.y, explosionColor);
-      console.log(particles, "particles");
-      particles.push(explosion);
+//     if (this.health <= 0) {
+//       // Add explosion animation when boss has no health
+//       const explosionColor = "orange"; // Color for the explosion particles
+//       const explosion = new ParticleExplosion(this.x, this.y, explosionColor);
+//       console.log(particles, "particles");
+//       particles.push(explosion);
 
-      // Remove the boss from the game after a brief period (e.g., 2 seconds)
-      setTimeout(() => {
-        // Remove the boss from the boss array (replace 'bosses' with your actual boss array)
-        const index = bosses.indexOf(this);
-        if (index !== -1) {
-          bosses.splice(index, 1);
-        }
-      }, 2000);
-    }
-  }
+//       // Remove the boss from the game after a brief period (e.g., 2 seconds)
+//       setTimeout(() => {
+//         // Remove the boss from the boss array (replace 'bosses' with your actual boss array)
+//         const index = bosses.indexOf(this);
+//         if (index !== -1) {
+//           bosses.splice(index, 1);
+//         }
+//       }, 2000);
+//     }
+//   }
 
-  update(player, projectiles, particles) {
-    this.attractProjectiles(projectiles);
-    this.drawHealthBar();
-    this.attractPlayer(player);
-    this.damageAura(player, particles);
-    // Other boss update logic (e.g., movement, attacking, etc.)
-  }
-}
+//   update(player, projectiles, particles) {
+//     this.attractProjectiles(projectiles);
+//     this.drawHealthBar();
+//     this.attractPlayer(player);
+//     this.damageAura(player, particles);
+//     // Other boss update logic (e.g., movement, attacking, etc.)
+//   }
+// }
