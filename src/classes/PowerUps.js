@@ -1,4 +1,4 @@
-import { Projectile } from "./Player.js";
+import { Projectile } from "./Projectile.js";
 
 export class Shockwave extends Projectile {
   constructor(x, y, radius, color, velocity) {

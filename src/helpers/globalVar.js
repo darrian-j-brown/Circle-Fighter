@@ -1,4 +1,4 @@
-import { Player } from "../components/player.js";
+import { Player } from "../classes/player.js";
 
 window.weaponType = "default";
 window.canvas = document.querySelector("canvas");
