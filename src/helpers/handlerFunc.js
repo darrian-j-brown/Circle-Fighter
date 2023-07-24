@@ -26,11 +26,11 @@ export function spawnEnemies() {
       y: Math.sin(angle),
     };
 
-    if (window.kills >= 5 && bosses.length === 0) {
+    if (window.kills >= 2 && bosses.length === 0) {
       console.log("bosses time");
-      // let health = 100;
+      let health = 100;
       enemies = [];
-      bosses.push(new Boss(0, 0, 50, "red", { x: 0, y: 0 }, 100));
+      bosses.push(new Boss(0, 0, 50, "red", { x: 0, y: 0 }, health));
       clearInterval(id);
     } else {
       let enemyType = [

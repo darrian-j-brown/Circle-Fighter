@@ -121,15 +121,21 @@ function animate() {
       if (bossDist - boss.radius - projectile.radius < 1) {
         for (let i = 0; i < 10 * 2; i++) {
           particles.push(
-            new Particle(boss.x, boss.y, boss.color, {
-              x: (Math.random() - 0.5) * (Math.random() * 6),
-              y: (Math.random() - 0.5) * (Math.random() * 6),
-            })
+            new Particle(
+              projectile.x,
+              projectile.y,
+              Math.random() * 2,
+              boss.color,
+              {
+                x: (Math.random() - 0.5) * (Math.random() * 6),
+                y: (Math.random() - 0.5) * (Math.random() * 6),
+              }
+            )
           );
         }
 
         if (boss.health - 1 > 1) {
-          boss.health -= 1;
+          boss.takeDamage();
           score += 100;
           scoreEl.innerHTML = score;
 

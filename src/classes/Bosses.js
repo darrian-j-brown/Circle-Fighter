@@ -10,7 +10,7 @@ export class Boss {
     this.velocity = velocity;
     this.health = health;
     this.maxHealth = health;
-    this.speed = 0.5;
+    this.speed = 0.3;
     this.damage = 1;
     this.shootInterval = null;
     this.healthBarWidth = 100; // Width of the health bar (you can adjust this value)
@@ -70,7 +70,7 @@ export class Boss {
     const dx = player.x - this.x;
     const dy = player.y - this.y;
     const angle = Math.atan2(dy, dx);
-    const speed = 1;
+    const speed = 0.1;
 
     // Calculate velocity towards the player
     const velocity = {
@@ -91,19 +91,19 @@ export class Boss {
 
     if (remainingHealthPercentage < 0.5) {
       // Increase boss speed gradually
-      this.speed = 0.8;
+      this.speed = 0.5;
       this.damage = 2;
 
       if (!this.shootInterval) {
         this.shootInterval = setInterval(() => {
-          this.shoot(player);
+          // this.shoot(player);
         }, 1500);
       }
     }
 
     if (remainingHealthPercentage < 0.3) {
       // Further increase boss speed gradually
-      this.speed = 5;
+      this.speed = 2;
       // this.damage = 3;
     }
 
@@ -121,6 +121,15 @@ export class Boss {
     // Update boss position
     this.x += velocity.x;
     this.y += velocity.y;
+
+    // Check if boss is defeated
+    if (this.health <= 0) {
+      this.destroy();
+    }
+  }
+
+  takeDamage() {
+    this.health -= this.damage;
   }
 
   destroy() {
@@ -128,6 +137,8 @@ export class Boss {
     if (this.shootInterval) {
       clearInterval(this.shootInterval);
     }
+    // Add any additional actions when the boss is destroyed
+    // For example, spawn particles or trigger a victory event.
   }
 }
 
@@ -139,39 +150,21 @@ export class IceBoss extends Boss {
   }
 
   draw(player) {
-    const color = this.colors[Math.floor(Math.random() * this.colors.length)];
-    context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    context.fillStyle = this.color;
-    context.fill();
-
-    // Enemy tracking player
+    // Boss movement
     const dx = player.x - this.x;
     const dy = player.y - this.y;
     const theta = Math.atan2(dy, dx);
     this.x += 0.5 * Math.cos(theta);
     this.y += 0.5 * Math.sin(theta);
-    healthBarContainer.style.top = `${this.y - 30}px`;
-    healthBarContainer.style.left = `${this.x}px`;
 
-    for (let i = 0; i < 2.5; i++) {
-      const particleColor =
-        this.colors[Math.floor(Math.random() * this.colors.length)];
-      this.particles.push(
-        new Particle(this.x, this.y, Math.random() * 2, particleColor, {
-          x: (Math.random() - 0.5) * (Math.random() * 6),
-          y: (Math.random() - 0.5) * (Math.random() * 6),
-        })
-      );
-    }
+    // Draw the boss
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.fillStyle = this.color;
+    context.fill();
 
-    this.particles.forEach((particle, index) => {
-      if (particle.alpha <= 0) {
-        this.particles.splice(index, 1);
-      } else {
-        particle.update();
-      }
-    });
+    // Boss health bar
+    this.drawHealthBar();
   }
 }
 

@@ -47,7 +47,7 @@ export class GunnerEnemy extends Enemy {
 
     this.shootInterval = setInterval(() => {
       this.shoot(player);
-    }, 500);
+    }, 1500);
   }
 
   shoot(player) {

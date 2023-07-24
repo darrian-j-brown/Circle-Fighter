@@ -17,6 +17,7 @@ export class Player {
     this.color = color;
     this.controls = [];
     this.weaponType = "default";
+    this.movementSpeed = 0.15;
 
     this.velocity = {
       x: 0,
@@ -81,21 +82,21 @@ export class Player {
   }
 
   update() {
-    // Draw the player
+    // Draw the playersa
     this.draw();
 
     if (this.controls) {
       if (this.controls[87]) {
-        this.velocity.y -= 0.15;
+        this.velocity.y -= this.movementSpeed;
       }
       if (this.controls[65]) {
-        this.velocity.x -= 0.15;
+        this.velocity.x -= this.movementSpeed;
       }
       if (this.controls[83]) {
-        this.velocity.y += 0.15;
+        this.velocity.y += this.movementSpeed;
       }
       if (this.controls[68]) {
-        this.velocity.x += 0.15;
+        this.velocity.x += this.movementSpeed;
       }
     }
 
