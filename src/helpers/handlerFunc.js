@@ -1,6 +1,6 @@
 // import { Projectile } from "./player.js";
 import { PowerUp } from "../classes/PowerUps.js";
-import { Boss, FireBoss, IceBoss, BlackHoleBoss } from "../classes/Bosses.js";
+import { Boss, FireBoss, IceBoss } from "../classes/Bosses.js";
 import { Enemy, GunnerEnemy } from "../classes/Enemies.js";
 
 let id, id2;
@@ -30,7 +30,7 @@ export function spawnEnemies() {
       console.log("bosses time");
       // let health = 100;
       enemies = [];
-      bosses.push(new BlackHoleBoss(0, 0, 50, "black", { x: 0, y: 0 }));
+      bosses.push(new Boss(0, 0, 50, "red", { x: 0, y: 0 }, 100));
       clearInterval(id);
     } else {
       let enemyType = [

@@ -5,7 +5,7 @@ const shootAudio = new Howl({
 });
 
 const playerPng = new Image();
-playerPng.src = "../images/f22SVG.png";
+playerPng.src = "../images/starfighter.svg";
 
 export class Player {
   constructor(x, y, radius, color) {
@@ -17,6 +17,12 @@ export class Player {
     this.color = color;
     this.controls = [];
     this.weaponType = "default";
+
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
+    this.friction = 0.98; // Adjust the friction factor
   }
 
   shoot(mouse) {
@@ -28,7 +34,7 @@ export class Player {
           this.x,
           this.y,
           5,
-          "green",
+          "black",
           this.getVelocity(mouse),
           this.color,
           mouse
@@ -75,7 +81,52 @@ export class Player {
   }
 
   update() {
+    // Draw the player
     this.draw();
+
+    if (this.controls) {
+      if (this.controls[87]) {
+        this.velocity.y -= 0.15;
+      }
+      if (this.controls[65]) {
+        this.velocity.x -= 0.15;
+      }
+      if (this.controls[83]) {
+        this.velocity.y += 0.15;
+      }
+      if (this.controls[68]) {
+        this.velocity.x += 0.15;
+      }
+    }
+
+    // Apply friction to slow down the player's movement
+    this.velocity.x *= this.friction;
+    this.velocity.y *= this.friction;
+
+    // Update the player's position based on velocity
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+
+    // Limit the player's movement within the canvas boundaries
+    if (this.x - this.radius < 0) {
+      this.x = this.radius;
+      this.velocity.x = 0.05;
+    }
+
+    if (this.x + this.radius > canvas.width) {
+      this.x = canvas.width - this.radius;
+      this.velocity.x = 0.05;
+    }
+
+    if (this.y - this.radius < 0) {
+      this.y = this.radius;
+      this.velocity.y = 0.05;
+    }
+
+    if (this.y + this.radius > canvas.height) {
+      this.y = canvas.height - this.radius;
+      this.velocity.y = 0.05;
+    }
   }
 
   getVelocity(mouse) {

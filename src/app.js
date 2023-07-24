@@ -1,5 +1,5 @@
 import { Player } from "./classes/Player.js";
-import { Particle, ParticleExplosion } from "./classes/Particle.js";
+import { Particle } from "./classes/Particle.js";
 import {
   spawnEnemies,
   spawnPowerUps,
@@ -20,7 +20,7 @@ const y = canvas.height / 2;
 
 function init() {
   isGameActive = true;
-  player = new Player(x, y, 10, `hsl(${360 * Math.random()}, 100%, 50%)`);
+  player = new Player(x, y, 25, `hsl(${360 * Math.random()}, 100%, 50%)`);
   projectiles = [];
   enemies = [];
   powerUps = [];
@@ -30,7 +30,7 @@ function init() {
   weaponType = "default";
   specialMeter = +"90";
   score = 0;
-  lives = 3;
+  lives = 100;
   kills = 0;
   livesEl.innerHTML = lives;
   scoreEl.innerHTML = score;
@@ -61,7 +61,7 @@ function animate() {
   frame++;
   context.fillStyle = "gray";
   context.fillRect(0, 0, canvas.width, canvas.height);
-  player.draw();
+  player.update();
   const deltaTime = (currentTime - lastTime) / 1000;
   lastTime = currentTime;
 
@@ -346,21 +346,6 @@ function animate() {
       }
     });
   });
-
-  if (player.controls) {
-    if (player.controls[87]) {
-      player.y -= 5;
-    }
-    if (player.controls[65]) {
-      player.x -= 5;
-    }
-    if (player.controls[83]) {
-      player.y += 5;
-    }
-    if (player.controls[68]) {
-      player.x += 5;
-    }
-  }
 }
 
 startGameBtn.addEventListener("click", () => {
