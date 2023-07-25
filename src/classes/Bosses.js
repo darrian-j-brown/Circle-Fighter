@@ -3,6 +3,7 @@ import { Particle } from "./Particle.js";
 
 export class Boss {
   constructor(x, y, radius, color, velocity, health) {
+    this.name = "Boss";
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -145,6 +146,7 @@ export class Boss {
 export class IceBoss extends Boss {
   constructor(x, y, radius, color, velocity, health) {
     super(x, y, radius, color, velocity, health);
+    this.name = "IceBoss";
     this.particles = [];
     this.colors = ["#ffffff", "#b9e8ea", "#86d6d8", "#20c3d0", "#3fd0d4"];
   }
@@ -171,6 +173,7 @@ export class IceBoss extends Boss {
 export class FireBoss extends IceBoss {
   constructor(x, y, radius, color, velocity, health) {
     super(x, y, radius, color, velocity, health);
+    this.name = "FireBoss";
     this.colors = ["#800909", "#f07f13", "#f27d0c", "#757676", "#fdcf58"];
   }
 }

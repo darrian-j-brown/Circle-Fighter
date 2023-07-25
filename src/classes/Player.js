@@ -13,6 +13,7 @@ export class Player {
     this.y = y;
     this.width = 50; // Adjust the width of the fighter jet image
     this.height = 50; // Adjust the height of the fighter jet image
+    this.health = 100;
     this.radius = radius;
     this.color = color;
     this.controls = [];
@@ -79,6 +80,12 @@ export class Player {
   destroy() {
     this.x = -100;
     this.y = -100;
+  }
+
+  takeDamage(sourceOfDamage) {
+    //Enemy collides with player
+    //Projectile collides with player
+    //Boss collides with player
   }
 
   update() {

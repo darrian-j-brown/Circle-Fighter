@@ -38,7 +38,7 @@ export function spawnEnemies() {
         new GunnerEnemy(x, y, radius, color, velocity, player),
       ];
       const enemy = enemyType[Math.floor(Math.random() * enemyType.length)];
-      if (enemy.name === "gunner" && deviceType() === "mobile") {
+      if (enemy.name === "GunnerEnemy" && deviceType() === "mobile") {
         let mobileFriendlyEnemy = new Enemy(x, y, radius, color, velocity);
         enemies.push(mobileFriendlyEnemy);
       } else {

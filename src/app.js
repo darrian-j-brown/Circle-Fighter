@@ -167,7 +167,7 @@ function animate() {
       } else if (powerUp.name === "Shotgun") {
         player.weaponType = "Shotgun";
       }
-
+      // powerUp.pickedUp();
       powerUps.splice(index, 1);
       endAndStartTimer();
     } else if (

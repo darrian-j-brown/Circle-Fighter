@@ -1,5 +1,6 @@
 export class Projectile {
   constructor(x, y, radius, color, velocity) {
+    this.name = "Projectile";
     this.x = x;
     this.y = y;
     this.radius = radius;

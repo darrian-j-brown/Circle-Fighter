@@ -2,6 +2,7 @@ import { Projectile } from "./Projectile.js";
 
 export class Enemy {
   constructor(x, y, radius, color, velocity) {
+    this.name = "Enemy";
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -43,7 +44,7 @@ export class GunnerEnemy extends Enemy {
   constructor(x, y, radius, color, velocity, player) {
     super(x, y, radius, color, velocity);
     this.projectiles = [];
-    this.name = "gunner";
+    this.name = "GunnerEnemy";
 
     this.shootInterval = setInterval(() => {
       this.shoot(player);
