@@ -114,8 +114,8 @@ function animate() {
     projectiles.forEach((projectile, projectileIndex) => {
       const bossDist = Math.hypot(projectile.x - boss.x, projectile.y - boss.y);
       projectile.update();
-
       if (bossDist - boss.radius - projectile.radius < 1) {
+        boss.takeDamage();
         for (let i = 0; i < 10 * 2; i++) {
           particles.push(
             new Particle(

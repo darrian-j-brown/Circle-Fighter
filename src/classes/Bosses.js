@@ -144,11 +144,38 @@ export class Boss {
 }
 
 export class IceBoss extends Boss {
-  constructor(x, y, radius, color, velocity, health) {
+  constructor(x, y, radius, color, velocity, health, shieldHealth, player) {
     super(x, y, radius, color, velocity, health);
+    this.player = player;
     this.name = "IceBoss";
-    this.particles = [];
+    this.projectiles = [];
     this.colors = ["#ffffff", "#b9e8ea", "#86d6d8", "#20c3d0", "#3fd0d4"];
+    this.shieldHealth = shieldHealth;
+    this.isShieldActive = true;
+  }
+
+  takeDamage() {
+    let damage = 1;
+    if (this.isShieldActive) {
+      this.shieldHealth -= damage;
+      if (this.shieldHealth <= 0) {
+        this.isShieldActive = false; // Shield breaks
+        this.shieldHealth = 0;
+      }
+    } else {
+      // If the shield is broken, boss takes direct damage to its health
+      this.health -= damage;
+    }
+  }
+
+  applyFrostbite(radius) {
+    const playerDistToBoss = Math.hypot(player.x - this.x, player.y - this.y);
+    const playerInAuraRadius = playerDistToBoss <= radius;
+    if (playerInAuraRadius) {
+      player.movementSpeed = 0.05;
+    } else {
+      player.movementSpeed = 0.15;
+    }
   }
 
   draw(player) {
@@ -165,8 +192,46 @@ export class IceBoss extends Boss {
     context.fillStyle = this.color;
     context.fill();
 
+    // Draw the boss aura (frostbite aura)
+    // Set the transparency level for the aura
+    const auraAlpha = 0.03; // Adjust the transparency level (0.0 - fully transparent, 1.0 - fully opaque)
+    const auraRadius = this.radius + 100; // Adjust the size of the aura as needed
+    context.globalAlpha = auraAlpha;
+
+    context.beginPath();
+    context.arc(this.x, this.y, auraRadius, 0, Math.PI * 2, false);
+    context.fillStyle = "lightblue"; // Color of the aura
+    context.fill();
+    context.globalAlpha = 1.0;
+
+    // Draw the boss shield
+    if (this.isShieldActive && this.shieldHealth > 0) {
+      const shieldRadius = this.radius + 10; // Adjust the size of the shield as needed
+
+      // Create a radial gradient for the shield
+      const gradient = context.createRadialGradient(
+        this.x,
+        this.y,
+        shieldRadius * 0.5, // Inner circle radius for the gradient
+        this.x,
+        this.y,
+        shieldRadius // Outer circle radius for the gradient
+      );
+      gradient.addColorStop(0, "rgba(255, 255, 255, 0.8)"); // Inner color (more opaque)
+      gradient.addColorStop(1, "rgba(255, 255, 255, 0.2)"); // Outer color (more transparent)
+
+      context.beginPath();
+      context.arc(this.x, this.y, shieldRadius, 0, Math.PI * 2, false);
+      context.strokeStyle = gradient; // Use the gradient as the fill style
+      context.lineWidth = 10;
+      context.stroke();
+    }
+
     // Boss health bar
     this.drawHealthBar();
+
+    // Apple frostbite to player
+    this.applyFrostbite(auraRadius);
   }
 }
 
