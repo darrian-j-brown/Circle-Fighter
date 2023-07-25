@@ -26,7 +26,7 @@ export function spawnEnemies() {
       y: Math.sin(angle),
     };
 
-    if (window.kills >= 2 && bosses.length === 0) {
+    if (window.kills >= 20 && bosses.length === 0) {
       console.log("bosses time");
       let health = 100;
       enemies = [];

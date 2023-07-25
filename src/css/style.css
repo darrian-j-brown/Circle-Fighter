@@ -45,22 +45,6 @@ canvas {
   -webkit-user-select: none;
 }
 
-.health-bar-container {
-position: fixed;
-background: none;
-border: 1px solid white;
-width: 200px;
-height: 20px;
-transform: translateX(-50%) translateY(-390%);
-}
-
-.health-bar {
-display: inline-block;
-width: 100%;
-height: 20px;
-background-color: #33ee33;
-}
-
 .special-meter-bar-container {
   position: fixed;
   background: none;
@@ -68,7 +52,8 @@ background-color: #33ee33;
   width: 100px;
   height: 20px;
   margin-left: .50rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
+  transition: width 0.3s ease; /* Optional: Add smooth animation when the health meter changes */
   }
   
   .special-meter-bar {
@@ -76,6 +61,7 @@ background-color: #33ee33;
   width: 0%;
   height: 20px;
   background-color: blue;
+  transition: width 0.3s ease; /* Optional: Add smooth animation when the health meter changes */
   }
 
   .dropbtn {

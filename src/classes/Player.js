@@ -13,7 +13,7 @@ export class Player {
     this.y = y;
     this.width = 50; // Adjust the width of the fighter jet image
     this.height = 50; // Adjust the height of the fighter jet image
-    this.health = 50;
+    this.health = 100;
     this.radius = radius;
     this.color = color;
     this.controls = [];
@@ -62,6 +62,26 @@ export class Player {
     }
   }
 
+  drawHealthBar() {
+    const healthBarWidth = 50;
+    const healthBarHeight = 5;
+    const maxHealth = 100;
+
+    const healthBarX = this.x - healthBarWidth / 2;
+    const healthBarY = this.y + this.height / 2 + 10; // Adjust the Y position as needed
+
+    context.beginPath();
+    context.rect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+    context.fillStyle = "red"; // Color of the health bar
+    context.fill();
+
+    const currentHealthWidth = (this.health / maxHealth) * healthBarWidth;
+    context.beginPath();
+    context.rect(healthBarX, healthBarY, currentHealthWidth, healthBarHeight);
+    context.fillStyle = "lightgreen"; // Color of the current health
+    context.fill();
+  }
+
   draw() {
     // Code to render player as a fighter jet
     context.save();
@@ -75,6 +95,7 @@ export class Player {
       this.height
     );
     context.restore();
+    this.drawHealthBar();
   }
 
   destroy() {
@@ -83,14 +104,14 @@ export class Player {
   }
 
   takeDamage(damageType) {
-    //Enemy collides with player
+    // Enemy collides with player
     if (damageType.name === "Enemy" || damageType.name === "GunnerEnemy") {
       this.health -= 10;
-      //Boss collides with player
+      // Boss collides with player
     } else if (damageType.name === "Boss") {
       this.health -= this.health;
     } else {
-      //Projectile collides with player
+      // Projectile collides with player
       this.health -= 5;
     }
   }

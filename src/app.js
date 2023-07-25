@@ -31,7 +31,6 @@ function init() {
   specialMeter = +"90";
   score = 0;
   kills = 0;
-  livesEl.innerHTML = player.health;
   scoreEl.innerHTML = score;
   bigScoreEl.innerHTML = score;
 }
@@ -97,7 +96,6 @@ function animate() {
     const bossDist = Math.hypot(player.x - boss.x, player.y - boss.y);
     if (bossDist - boss.radius - player.radius < 1) {
       player.takeDamage(boss);
-      livesEl.innerHTML = player.health;
 
       if (player.health <= 0) {
         for (let i = 0; i < 60 * 2; i++) {
@@ -191,7 +189,6 @@ function animate() {
 
     if (dist - enemy.radius - player.radius < 1) {
       player.takeDamage(enemy);
-      livesEl.innerHTML = player.health;
 
       if (player.health <= 0) {
         for (let i = 0; i < 60 * 2; i++) {
@@ -245,7 +242,6 @@ function animate() {
           }, 0);
 
           player.takeDamage(enemyProjectileIndex);
-          livesEl.innerHTML = player.health;
 
           if (player.health <= 0) {
             for (let i = 0; i < 60 * 2; i++) {
