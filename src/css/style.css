@@ -45,29 +45,6 @@ canvas {
   -webkit-user-select: none;
 }
 
-.specialMeter {
-  background-color: blue;
-  height: 15px;
-  width: 150px;
-  margin-left: .50rem;
-  margin: 0 auto;
-  border: solid 1px #aaa;
-  position: fixed;
-  color: white;
-  margin-top: 3rem;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-}
-
-.specialMeter2 {
-background-color: lightblue;
-width: inherit;
-height: 28px;
-position: relative;
-bottom: 56px;
-}
-
 .health-bar-container {
 position: fixed;
 background: none;
@@ -84,7 +61,7 @@ height: 20px;
 background-color: #33ee33;
 }
 
-.special-bar-container {
+.special-meter-bar-container {
   position: fixed;
   background: none;
   border: 1px solid white;
@@ -94,7 +71,7 @@ background-color: #33ee33;
   margin-top: 3rem;
   }
   
-  .health-bar2 {
+  .special-meter-bar {
   display: inline-block;
   width: 0%;
   height: 20px;
