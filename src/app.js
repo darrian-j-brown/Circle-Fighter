@@ -30,9 +30,8 @@ function init() {
   weaponType = "default";
   specialMeter = +"90";
   score = 0;
-  lives = 100;
   kills = 0;
-  livesEl.innerHTML = lives;
+  livesEl.innerHTML = player.health;
   scoreEl.innerHTML = score;
   bigScoreEl.innerHTML = score;
 }
@@ -97,10 +96,10 @@ function animate() {
 
     const bossDist = Math.hypot(player.x - boss.x, player.y - boss.y);
     if (bossDist - boss.radius - player.radius < 1) {
-      lives -= lives;
-      livesEl.innerHTML = lives;
+      player.takeDamage(boss);
+      livesEl.innerHTML = player.health;
 
-      if (lives === 0) {
+      if (player.health <= 0) {
         for (let i = 0; i < 60 * 2; i++) {
           particles.push(
             new Particle(player.x, player.y, Math.random() * 2, player.color, {
@@ -191,10 +190,10 @@ function animate() {
     const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
 
     if (dist - enemy.radius - player.radius < 1) {
-      lives -= 1;
-      livesEl.innerHTML = lives;
+      player.takeDamage(enemy);
+      livesEl.innerHTML = player.health;
 
-      if (lives === 0) {
+      if (player.health <= 0) {
         for (let i = 0; i < 60 * 2; i++) {
           particles.push(
             new Particle(player.x, player.y, Math.random() * 2, player.color, {
@@ -245,10 +244,10 @@ function animate() {
             enemy.projectiles.splice(enemyProjectileIndex, 1);
           }, 0);
 
-          lives -= 1;
-          livesEl.innerHTML = lives;
+          player.takeDamage(enemyProjectileIndex);
+          livesEl.innerHTML = player.health;
 
-          if (lives === 0) {
+          if (player.health <= 0) {
             for (let i = 0; i < 60 * 2; i++) {
               particles.push(
                 new Particle(

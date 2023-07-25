@@ -13,7 +13,7 @@ export class Player {
     this.y = y;
     this.width = 50; // Adjust the width of the fighter jet image
     this.height = 50; // Adjust the height of the fighter jet image
-    this.health = 100;
+    this.health = 50;
     this.radius = radius;
     this.color = color;
     this.controls = [];
@@ -82,10 +82,17 @@ export class Player {
     this.y = -100;
   }
 
-  takeDamage(sourceOfDamage) {
+  takeDamage(damageType) {
     //Enemy collides with player
-    //Projectile collides with player
-    //Boss collides with player
+    if (damageType.name === "Enemy" || damageType.name === "GunnerEnemy") {
+      this.health -= 10;
+      //Boss collides with player
+    } else if (damageType.name === "Boss") {
+      this.health -= this.health;
+    } else {
+      //Projectile collides with player
+      this.health -= 5;
+    }
   }
 
   update() {

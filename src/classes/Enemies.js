@@ -2,7 +2,7 @@ import { Projectile } from "./Projectile.js";
 
 export class Enemy {
   constructor(x, y, radius, color, velocity) {
-    this.name = "Enemy";
+    this.name = "Enemy"; //TODO - Enemies should have something unqiue to identify them as a whole (this.familyType === enemy)
     this.x = x;
     this.y = y;
     this.radius = radius;
