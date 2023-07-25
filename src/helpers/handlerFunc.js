@@ -31,7 +31,7 @@ export function spawnEnemies() {
       let health = 100;
       enemies = [];
       bosses.push(
-        new IceBoss(0, 0, 50, "#ffffff", { x: 0, y: 0 }, health, 50, player)
+        new FireBoss(0, 0, 50, "#800909", { x: 0, y: 0 }, health, 50, player)
       );
       clearInterval(id);
     } else {

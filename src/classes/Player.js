@@ -104,9 +104,11 @@ export class Player {
   }
 
   takeDamage(damageType) {
+    console.log(damageType, "type");
     // Enemy collides with player
     if (damageType.name === "Enemy" || damageType.name === "GunnerEnemy") {
       this.health -= 10;
+      console.log("hit");
       // Boss collides with player
     } else if (damageType.name === "Boss") {
       this.health -= this.health;
