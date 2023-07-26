@@ -93,7 +93,7 @@ export class Boss {
     if (remainingHealthPercentage < 0.5) {
       // Increase boss speed gradually
       this.speed = 0.5;
-      this.damage = 2;
+      this.damage = 1;
 
       if (!this.shootInterval) {
         this.shootInterval = setInterval(() => {
