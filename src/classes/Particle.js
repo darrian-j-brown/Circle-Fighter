@@ -11,7 +11,7 @@ export class Particle extends Projectile {
     context.save();
     context.globalAlpha = this.alpha;
     context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fillStyle = this.color;
     context.fill();
     context.restore();
@@ -27,7 +27,10 @@ export class Particle extends Projectile {
 
     if (this.alpha <= 0) {
       // Remove the particle from the array or perform cleanup
-      particles.splice(particles.indexOf(this), 1);
+      const index = particles.indexOf(this);
+      if (index !== -1) {
+        particles.splice(index, 1);
+      }
     }
   }
 }

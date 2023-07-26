@@ -1,16 +1,52 @@
 import { Player } from "./classes/Player.js";
-import { Particle, ParticleExplosion } from "./classes/Particle.js";
+import { Particle } from "./classes/Particle.js";
 import {
   spawnEnemies,
   spawnPowerUps,
   endAndStartTimer,
   deviceType,
 } from "./helpers/handlerFunc.js";
-
 const backgroundMusicAudio = new Audio("../audio/rave digger.mp3");
 backgroundMusicAudio.loop = true;
+const items = { ...localStorage };
+console.log(items, "items");
+// localStorage.clear();
 
 const devicePixelRatio = window.devicePixelRatio || 1;
+
+if (!localStorage.getItem("level2")) {
+  localStorage.setItem("level", 0);
+  localStorage.setItem("level2", "locked");
+  localStorage.setItem("level3", "locked");
+}
+
+// Function to unlock the next level and update button states
+const unlockNextLevel = (nextLevel) => {
+  localStorage.setItem(`level${nextLevel}`, "unlocked");
+  updateButtonStates();
+};
+
+// Function to update the button states based on the current level
+const updateButtonStates = () => {
+  const buttons = document.querySelectorAll(".shaped-box");
+  buttons.forEach((button) => {
+    const buttonLevel = parseInt(button.dataset.level, 10);
+    const buttonState = localStorage.getItem(`level${buttonLevel}`);
+    if (buttonState === "unlocked") {
+      button.classList.remove("locked");
+      const lockIcon = button.querySelector(".lock-icon");
+      if (lockIcon) {
+        lockIcon.style.display = "none";
+      }
+    } else {
+      button.classList.add("locked");
+      const lockIcon = button.querySelector(".lock-icon");
+      if (lockIcon) {
+        lockIcon.style.display = "inline-block";
+      }
+    }
+  });
+};
 
 canvas.width = innerWidth * devicePixelRatio;
 canvas.height = innerHeight * devicePixelRatio;
@@ -18,9 +54,94 @@ canvas.height = innerHeight * devicePixelRatio;
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
+const checkIfPlayerWon = () => {
+  let checkGameData = localStorage.getItem("level");
+
+  // Parse the checkGameData to an integer to compare with the levelData
+  checkGameData = parseInt(checkGameData, 10);
+
+  if (player.health > 0) {
+    // Check if the current level data exists in the levelData object
+    if (levelData[checkGameData]) {
+      // Increment the current level if the player won the level
+      const currentLevelData = levelData[checkGameData];
+      const requiredKills = currentLevelData.kills;
+
+      if (kills >= requiredKills) {
+        // Unlock the next level
+        const nextLevel = checkGameData + 1;
+        localStorage.setItem("level", nextLevel.toString());
+
+        // Show a message indicating that the level is finished and unlocked
+        console.log(`level ${checkGameData} finished.`);
+        unlockNextLevel(nextLevel); // Unlock the next level after completing the current level
+      }
+    } else {
+      console.log("Invalid level data for the current level.");
+    }
+  }
+};
+
+const levelData = {
+  1: {
+    level: 1,
+    name: "Boss",
+    x: 0,
+    y: 0,
+    radius: 100,
+    color: "red",
+    velocity: { x: 0, y: 0 },
+    health: 100,
+    player: player,
+    enemies: ["Enemy"],
+    kills: 1,
+    enemySpawnRate: 4000,
+  },
+  2: {
+    level: 2,
+    name: "FireBoss",
+    x: 0,
+    y: 0,
+    radius: 100,
+    color: "#800909",
+    velocity: { x: 0, y: 0 },
+    health: 100,
+    player: player,
+    enemies: ["Enemy"],
+    kills: 2,
+    enemySpawnRate: 3000,
+  },
+  3: {
+    level: 3,
+    name: "IceBoss",
+    x: 0,
+    y: 0,
+    radius: 100,
+    color: "#ffffff",
+    velocity: { x: 0, y: 0 },
+    health: 100,
+    shieldHealth: 100,
+    player: player,
+    enemies: ["Enemy", "GunnerEnemy"],
+    kills: 3,
+    enemySpawnRate: 2500,
+  },
+  LevelSecret: {
+    Boss: {
+      x: 0,
+      y: 0,
+      radius: 50,
+      color: "#800909",
+      velocity: { x: 0, y: 0 },
+      health: 100,
+      player: player,
+    },
+  },
+};
+
 function init() {
   isGameActive = true;
-  player = new Player(x, y, 10, `hsl(${360 * Math.random()}, 100%, 50%)`);
+  player = new Player(x, y, 25, `hsl(${360 * Math.random()}, 100%, 50%)`);
   projectiles = [];
   enemies = [];
   powerUps = [];
@@ -28,11 +149,9 @@ function init() {
   particles = [];
   abilities = [];
   weaponType = "default";
-  specialMeter = +"90";
+  specialMeter = 90;
   score = 0;
-  lives = 3;
   kills = 0;
-  livesEl.innerHTML = lives;
   scoreEl.innerHTML = score;
   bigScoreEl.innerHTML = score;
 }
@@ -61,7 +180,7 @@ function animate() {
   frame++;
   context.fillStyle = "gray";
   context.fillRect(0, 0, canvas.width, canvas.height);
-  player.draw();
+  player.update();
   const deltaTime = (currentTime - lastTime) / 1000;
   lastTime = currentTime;
 
@@ -77,6 +196,11 @@ function animate() {
       particle.update();
     }
   });
+
+  if (player.health <= 0) {
+    // check if player is destroyed by effects
+    handleEndGame();
+  }
 
   projectiles.forEach((projectile, index) => {
     projectile.update(deltaTime, projectiles);
@@ -97,10 +221,9 @@ function animate() {
 
     const bossDist = Math.hypot(player.x - boss.x, player.y - boss.y);
     if (bossDist - boss.radius - player.radius < 1) {
-      lives -= lives;
-      livesEl.innerHTML = lives;
+      player.takeDamage(boss);
 
-      if (lives === 0) {
+      if (player.health <= 0) {
         for (let i = 0; i < 60 * 2; i++) {
           particles.push(
             new Particle(player.x, player.y, Math.random() * 2, player.color, {
@@ -117,19 +240,25 @@ function animate() {
     projectiles.forEach((projectile, projectileIndex) => {
       const bossDist = Math.hypot(projectile.x - boss.x, projectile.y - boss.y);
       projectile.update();
-
       if (bossDist - boss.radius - projectile.radius < 1) {
+        boss.takeDamage();
         for (let i = 0; i < 10 * 2; i++) {
           particles.push(
-            new Particle(boss.x, boss.y, boss.color, {
-              x: (Math.random() - 0.5) * (Math.random() * 6),
-              y: (Math.random() - 0.5) * (Math.random() * 6),
-            })
+            new Particle(
+              projectile.x,
+              projectile.y,
+              Math.random() * 2,
+              boss.color,
+              {
+                x: (Math.random() - 0.5) * (Math.random() * 6),
+                y: (Math.random() - 0.5) * (Math.random() * 6),
+              }
+            )
           );
         }
 
         if (boss.health - 1 > 1) {
-          boss.health -= 1;
+          boss.takeDamage();
           score += 100;
           scoreEl.innerHTML = score;
 
@@ -143,6 +272,7 @@ function animate() {
             bosses.splice(index, 1);
             projectiles.splice(projectileIndex, 1);
           }, 0);
+          checkIfPlayerWon();
           handleEndGame();
         }
       }
@@ -161,7 +291,7 @@ function animate() {
       } else if (powerUp.name === "Shotgun") {
         player.weaponType = "Shotgun";
       }
-
+      // powerUp.pickedUp();
       powerUps.splice(index, 1);
       endAndStartTimer();
     } else if (
@@ -185,10 +315,9 @@ function animate() {
     const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
 
     if (dist - enemy.radius - player.radius < 1) {
-      lives -= 1;
-      livesEl.innerHTML = lives;
+      player.takeDamage(enemy);
 
-      if (lives === 0) {
+      if (player.health <= 0) {
         for (let i = 0; i < 60 * 2; i++) {
           particles.push(
             new Particle(player.x, player.y, Math.random() * 2, player.color, {
@@ -239,10 +368,9 @@ function animate() {
             enemy.projectiles.splice(enemyProjectileIndex, 1);
           }, 0);
 
-          lives -= 1;
-          livesEl.innerHTML = lives;
+          player.takeDamage(enemyProjectileIndex);
 
-          if (lives === 0) {
+          if (player.health <= 0) {
             for (let i = 0; i < 60 * 2; i++) {
               particles.push(
                 new Particle(
@@ -295,7 +423,7 @@ function animate() {
         } else {
           kills += 1;
           if (specialMeter !== 100) {
-            specialMeter += +"10";
+            specialMeter += 10;
           }
 
           specialBarEl.style.width = `${specialMeter}%`;
@@ -346,33 +474,56 @@ function animate() {
       }
     });
   });
-
-  if (player.controls) {
-    if (player.controls[87]) {
-      player.y -= 5;
-    }
-    if (player.controls[65]) {
-      player.x -= 5;
-    }
-    if (player.controls[83]) {
-      player.y += 5;
-    }
-    if (player.controls[68]) {
-      player.x += 5;
-    }
-  }
 }
 
-startGameBtn.addEventListener("click", () => {
-  init();
+const level1Button = document.getElementById("level1Button");
+const level2Button = document.getElementById("level2Button");
+const level3Button = document.getElementById("level3Button");
+
+level1Button.addEventListener("click", () => {
+  localStorage.setItem("level", 1);
+  init(levelData[1]);
   animate();
-  spawnEnemies();
+  spawnEnemies(levelData[1]);
   spawnPowerUps();
   modalEl.style.display = "none";
+});
+
+level2Button.addEventListener("click", () => {
+  // Complete level 1
+  localStorage.setItem("level", 2);
+  let checkPreviousLevel = localStorage.getItem("level2");
+  if (checkPreviousLevel === "unlocked") {
+    init(levelData[2]);
+    animate();
+    spawnEnemies(levelData[2]);
+    spawnPowerUps();
+    modalEl.style.display = "none";
+  } else {
+    alert("Finish level 1");
+  }
+});
+
+level3Button.addEventListener("click", () => {
+  // Complete level 2
+  let checkPreviousLevel = localStorage.getItem("level3");
+  if (checkPreviousLevel === "unlocked") {
+    init(levelData[3]);
+    animate();
+    spawnEnemies(levelData[3]);
+    spawnPowerUps();
+    modalEl.style.display = "none";
+  } else {
+    alert("Finish level 2");
+  }
 });
 
 addEventListener("resize", () => {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
   init();
+  updateButtonStates();
 });
+
+// Call the updateButtonStates function to set the initial button states
+updateButtonStates();

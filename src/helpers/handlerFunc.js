@@ -1,14 +1,13 @@
 // import { Projectile } from "./player.js";
 import { PowerUp } from "../classes/PowerUps.js";
-import { Boss, FireBoss, IceBoss, BlackHoleBoss } from "../classes/Bosses.js";
+import { Boss, FireBoss, IceBoss } from "../classes/Bosses.js";
 import { Enemy, GunnerEnemy } from "../classes/Enemies.js";
 
 let id, id2;
 
-export function spawnEnemies() {
+export function spawnEnemies(gameData) {
   id = setInterval(() => {
     const radius = Math.random() * (30 - 4) + 4;
-    // console.log('radius', radius)
     let x;
     let y;
 
@@ -26,26 +25,64 @@ export function spawnEnemies() {
       y: Math.sin(angle),
     };
 
-    if (window.kills >= 5 && bosses.length === 0) {
+    if (window.kills >= gameData.kills && bosses.length === 0) {
       console.log("bosses time");
-      // let health = 100;
+      let health = 100;
       enemies = [];
-      bosses.push(new BlackHoleBoss(0, 0, 50, "black", { x: 0, y: 0 }));
+      if (gameData.name === "FireBoss") {
+        bosses.push(
+          new FireBoss(
+            gameData.x,
+            gameData.y,
+            gameData.radius,
+            gameData.color,
+            gameData.velocity,
+            gameData.health,
+            gameData.player
+          )
+        );
+      } else if (gameData.name === "IceBoss") {
+        bosses.push(
+          new IceBoss(
+            gameData.x,
+            gameData.y,
+            gameData.radius,
+            gameData.color,
+            gameData.velocity,
+            gameData.health,
+            gameData.shieldHealth,
+            gameData.player
+          )
+        );
+      } else {
+        bosses.push(
+          new Boss(
+            gameData.x,
+            gameData.y,
+            gameData.radius,
+            gameData.color,
+            gameData.velocity,
+            gameData.health,
+            gameData.player
+          )
+        );
+      }
+
       clearInterval(id);
     } else {
-      let enemyType = [
-        new Enemy(x, y, radius, color, velocity),
-        new GunnerEnemy(x, y, radius, color, velocity, player),
-      ];
+      let enemyType = gameData.enemies;
       const enemy = enemyType[Math.floor(Math.random() * enemyType.length)];
-      if (enemy.name === "gunner" && deviceType() === "mobile") {
+      if (enemy === "Enemy") {
+        enemies.push(new Enemy(x, y, radius, color, velocity));
+      } else if (enemy === "GunnerEnemy") {
+        enemies.push(new GunnerEnemy(x, y, radius, color, velocity, player));
+      }
+      if (enemy.name === "GunnerEnemy" && deviceType() === "mobile") {
         let mobileFriendlyEnemy = new Enemy(x, y, radius, color, velocity);
         enemies.push(mobileFriendlyEnemy);
-      } else {
-        enemies.push(enemy);
       }
     }
-  }, 4000);
+  }, gameData.enemySpawnRate);
 }
 
 export function spawnPowerUps() {
